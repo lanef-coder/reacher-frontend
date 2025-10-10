@@ -25,9 +25,9 @@
       background: #111;
       color: white;
       display: flex;
-      justify-content: center;
+      justify-content: space-between;
       align-items: center;
-      padding: 15px 25px;
+      padding: 15px 20px;
       border-bottom: 2px solid #ff0000;
       position: sticky;
       top: 0;
@@ -35,22 +35,16 @@
     }
 
     header h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       color: #ff0000;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
-    header nav {
-      position: absolute;
-      right: 25px;
-    }
-
     header nav a {
       color: white;
       text-decoration: none;
-      margin-left: 20px;
       font-weight: 500;
       transition: 0.3s;
     }
@@ -117,6 +111,7 @@
       color: white;
       transition: 0.3s;
       text-transform: uppercase;
+      margin-top: 10px;
     }
 
     .btn:hover {
@@ -153,6 +148,60 @@
       color: #999;
       font-size: 14px;
       margin-top: 10px;
+    }
+
+    /* BACK TO CART BUTTON */
+    .back-btn {
+      background: #333;
+      color: white;
+      text-align: center;
+      display: block;
+      padding: 12px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: 0.3s;
+      margin-top: 15px;
+    }
+
+    .back-btn:hover {
+      background: #444;
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      visibility: hidden;
+      min-width: 260px;
+      background-color: #111;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 14px;
+      position: fixed;
+      z-index: 2000;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      border: 1px solid #ff0000;
+      font-size: 15px;
+      opacity: 0;
+      transition: opacity 0.5s, bottom 0.5s;
+    }
+
+    .toast.show {
+      visibility: visible;
+      opacity: 1;
+      bottom: 50px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 18px;
+      }
+      .container {
+        margin: 20px;
+        padding: 20px;
+      }
     }
   </style>
 </head>
@@ -199,16 +248,28 @@
 
       <button type="submit" class="btn">Proceed to Payment</button>
     </form>
+
+    <a href="cart.html" class="back-btn">← Back to Cart</a>
     <p class="note">All fields marked * are mandatory. Prepaid orders only.</p>
   </div>
 
+  <!-- TOAST -->
+  <div id="toast" class="toast"></div>
+
   <script>
     const statusEl = document.getElementById("locationStatus");
+    const toast = document.getElementById("toast");
+
+    function showToast(message, color = "#ff0000") {
+      toast.textContent = message;
+      toast.style.borderColor = color;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3000);
+    }
 
     async function detectLocation() {
       if (!navigator.geolocation) {
-        statusEl.textContent = "Geolocation not supported by your browser.";
-        statusEl.style.color = "#ff6666";
+        showToast("Geolocation not supported.", "#ff4444");
         return;
       }
 
@@ -228,15 +289,12 @@
           document.getElementById("state").value = data.address.state || "";
           document.getElementById("pincode").value = data.address.postcode || "";
 
-          statusEl.textContent = "Location detected and filled successfully.";
-          statusEl.style.color = "#00ff7f";
+          showToast("Location detected successfully!", "#00ff7f");
         } catch {
-          statusEl.textContent = "Unable to fetch address details.";
-          statusEl.style.color = "#ff6666";
+          showToast("Unable to fetch address details.", "#ff4444");
         }
       }, () => {
-        statusEl.textContent = "Permission denied or location unavailable.";
-        statusEl.style.color = "#ff6666";
+        showToast("Permission denied or unavailable.", "#ff4444");
       });
     }
 
@@ -256,13 +314,16 @@
 
       for (const [key, value] of Object.entries(address)) {
         if (key !== "address2" && !value) {
-          alert("Please fill all required fields.");
+          showToast("Please fill all required fields!", "#ff4444");
           return;
         }
       }
 
       localStorage.setItem("userAddress", JSON.stringify(address));
-      window.location.href = "payment.html";
+      showToast("Address saved! Redirecting...", "#00ff7f");
+      setTimeout(() => {
+        window.location.href = "payment.html";
+      }, 1500);
     });
   </script>
 </body>
