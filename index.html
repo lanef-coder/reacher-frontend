@@ -4,11 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REACHER STITCH</title>
+
+  <!-- Favicon -->
   <link rel="icon" href="logo.png" type="image/png" />
 
-  <!-- Google Fonts -->
+  <!-- Fonts & Icons -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
@@ -39,6 +40,7 @@
     }
 
     .logo {
+      text-align: center;
       color: #ff0000;
       font-size: 26px;
       font-weight: 700;
@@ -46,7 +48,7 @@
     }
 
     .material-icons {
-      font-size: 28px;
+      font-size: 30px;
       cursor: pointer;
       color: #fff;
       transition: color 0.3s;
@@ -56,7 +58,7 @@
       color: #ff0000;
     }
 
-    /* SIDEBAR */
+    /* SIDEBAR MENU */
     .side-menu {
       position: fixed;
       top: 0;
@@ -85,6 +87,7 @@
 
     .side-menu a:hover {
       background: #ff0000;
+      color: #fff;
     }
 
     /* SLIDER */
@@ -104,8 +107,10 @@
     .slides img {
       width: 100%;
       height: auto;
+      flex-shrink: 0;
       object-fit: cover;
       display: block;
+      background: #000;
     }
 
     /* PRODUCT SECTION */
@@ -113,17 +118,20 @@
       margin-top: 40px;
       padding: 0 20px;
       max-width: 1300px;
-      margin: 40px auto;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .product-title {
       font-size: 26px;
       font-weight: 700;
       margin-bottom: 25px;
-      text-align: center;
       color: #fff;
+      text-align: center;
+      letter-spacing: 1px;
     }
 
+    /* PRODUCT GRID */
     .product-slider {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -140,8 +148,10 @@
       max-width: 280px;
       overflow: hidden;
       transition: 0.3s;
+      color: #fff;
       display: flex;
       flex-direction: column;
+      text-align: center;
     }
 
     .product:hover {
@@ -159,16 +169,12 @@
     }
 
     .product-content {
-      padding: 12px 14px 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      gap: 6px;
+      padding: 12px 14px;
     }
 
     .product h3 {
       font-size: 15px;
+      margin-bottom: 6px;
       font-weight: 700;
       color: #fff;
       text-transform: uppercase;
@@ -178,18 +184,20 @@
       color: #ff3333;
       font-weight: 700;
       font-size: 16px;
+      margin: 4px 0 8px;
+      letter-spacing: 0.3px;
     }
 
-    /* BUY NOW BUTTON */
     .buy-btn {
       background: #ff0000;
       color: #fff;
-      border: none;
       padding: 8px 16px;
-      border-radius: 6px;
-      font-weight: 600;
+      border: none;
       cursor: pointer;
-      margin-top: 6px;
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 6px;
       transition: background 0.3s;
     }
 
@@ -210,9 +218,37 @@
       }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
+      .product-slider {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+
+      .product {
+        max-width: 180px;
+      }
+
       .product img {
-        height: 220px;
+        height: 200px;
+      }
+
+      .product h3 {
+        font-size: 13px;
+      }
+
+      .product p {
+        font-size: 14px;
+      }
+
+      .buy-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .product img {
+        height: 180px;
       }
     }
   </style>
@@ -250,7 +286,6 @@
     const menuBtn = document.getElementById("menuBtn");
     const sideMenu = document.getElementById("sideMenu");
     menuBtn.addEventListener("click", () => sideMenu.classList.toggle("active"));
-
     document.getElementById("cartBtn").onclick = () => location.href = "cart.html";
 
     const backendURL = "https://reacher-backend-production.up.railway.app";
@@ -263,7 +298,7 @@
         const ads = data.filter(i => i.type === "ad");
         const tees = data.filter(i => !i.type || i.type === "tee");
 
-        // SLIDER
+        // Ads Slider
         const slidesContainer = document.getElementById("slidesContainer");
         slidesContainer.innerHTML = ads.map(a => `
           <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
@@ -277,7 +312,7 @@
           }, 5000);
         }
 
-        // PRODUCTS
+        // Product Cards
         const productSlider = document.getElementById("productSlider");
         productSlider.innerHTML = tees.map(p => `
           <div class="product">
@@ -285,17 +320,13 @@
             <div class="product-content">
               <h3>${p.name}</h3>
               <p>₹${p.price}</p>
-              <button class="buy-btn" onclick="buyNow('${p._id}')">Buy Now</button>
+              <button class="buy-btn" onclick="location.href='productdetail.html?id=${p._id}'">Buy Now</button>
             </div>
           </div>
         `).join("");
       } catch (e) {
         console.error("❌ Failed to load products:", e);
       }
-    }
-
-    function buyNow(productId) {
-      location.href = `productdetail.html?id=${productId}`;
     }
 
     loadProducts();
