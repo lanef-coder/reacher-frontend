@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Product Details | Reacher Stitch</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+  body { background: #0b0b0b; color: #fff; overflow-x: hidden; }
+
+  header {
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+    border-bottom: 2px solid #ff0000;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  header h1 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #ff0000;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+  nav a:hover { color: #ff0000; }
+
+  .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
+
+  .image-viewer {
+    position: relative;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #222;
+    background: #000;
+  }
+
+  .image-viewer img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.3s; cursor: zoom-in; }
+  .image-viewer img.zoomed { transform: scale(1.5); cursor: zoom-out; }
+
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    border: none;
+    color: #fff;
+    font-size: 26px;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 10;
+  }
+  .arrow.left { left: 10px; }
+  .arrow.right { right: 10px; }
+
+  .info { text-align: center; margin-top: 25px; }
+  .product-title { font-size: 24px; font-weight: 700; color: #fff; margin-top: 15px; }
+  .price { font-size: 28px; font-weight: 800; color: #ff3b3b; margin: 15px 0 25px; }
+
+  .sizes { margin: 25px 0; }
+  .sizes button {
+    background: #222; color: #fff; border: 2px solid #555;
+    margin: 6px; padding: 10px 20px; font-weight: 600;
+    cursor: pointer; transition: all 0.3s; border-radius: 6px; font-size: 15px;
+  }
+  .sizes button:hover { border-color: #ff0000; }
+  .sizes button.active { border-color: #00ff7f; }
+  .sizes button.error { border-color: #ff0000; }
+
+  .qty { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0 30px; }
+  .qty button {
+    background: #333; color: white; width: 38px; height: 38px;
+    border: none; font-size: 20px; cursor: pointer; font-weight: 700; border-radius: 5px;
+  }
+  .qty input { width: 55px; text-align: center; border: none; background: #111; color: #fff; font-weight: 700; font-size: 17px; }
+
+  .add-cart {
+    background: #ff0000; color: white; border: none;
+    padding: 14px 40px; font-weight: 700; border-radius: 6px;
+    font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
+  }
+  .add-cart:hover { background: #cc0000; }
+
+  .desc { margin-top: 35px; color: #bbb; line-height: 1.7; text-align: left; }
+
+  .similar { margin-top: 60px; }
+  .similar h3 { font-size: 22px; color: #ff0000; margin-bottom: 20px; }
+
+  .similar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
+
+  .similar-item {
+    background: #161616; border: 1px solid #2b2b2b; text-align: center;
+    padding: 10px; cursor: pointer; transition: 0.3s;
+  }
+  .similar-item:hover { transform: translateY(-5px); border-color: #ff0000; }
+
+  .similar-item img { width: 100%; aspect-ratio: 1/1.2; object-fit: cover; }
+  .similar-item h4 { font-size: 14px; margin-top: 8px; }
+  .similar-item p { color: #ff3333; font-weight: 700; margin: 4px 0; }
+
+  @media (max-width: 768px) { .add-cart { width: 100%; } }
+</style>
+</head>
+
+<body>
+  <header>
+    <h1>Reacher Stitch</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cart.html">Cart</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="image-viewer">
+      <button class="arrow left" onclick="prevImage()">❮</button>
+      <img id="mainImage" src="" alt="Product Image" />
+      <button class="arrow right" onclick="nextImage()">❯</button>
+    </div>
+
+    <div class="info">
+      <h2 class="product-title" id="pname"></h2>
+      <div class="price" id="pprice"></div>
+
+      <div class="sizes" id="psizes"></div>
+
+      <div class="qty">
+        <button onclick="changeQty(-1)">-</button>
+        <input type="text" id="quantity" value="1" readonly />
+        <button onclick="changeQty(1)">+</button>
+      </div>
+
+      <button class="add-cart" onclick="addToCart()">Add to Cart</button>
+
+      <p class="desc" id="pdesc"></p>
+    </div>
+
+    <div class="similar">
+      <h3>Similar Products</h3>
+      <div class="similar-grid" id="similarGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    let product = null;
+    let currentImageIndex = 0;
+
+    async function loadProduct() {
+      const res = await fetch(`https://reacher-backend-production.up.railway.app/api/products/${id}`);
+      product = await res.json();
+
+      document.getElementById("pname").textContent = product.name;
+      document.getElementById("pprice").textContent = "₹" + product.price;
+      document.getElementById("pdesc").textContent = product.description;
+
+      const allImages = product.images || [];
+      if (allImages.length > 0) {
+        document.getElementById("mainImage").src = allImages[0];
+      }
+
+      const sizeKeys = Object.keys(product.sizes || {}).filter(s => s && s !== "_id");
+      document.getElementById("psizes").innerHTML = sizeKeys
+        .map(s => `<button onclick="selectSize(this)">${s}</button>`)
+        .join("");
+
+      loadSimilar();
+    }
+
+    function nextImage() {
+      const allImages = product.images || [];
+      if (allImages.length === 0) return;
+      currentImageIndex = (currentImageIndex + 1) % allImages.length;
+      document.getElementById("mainImage").src = allImages[currentImageIndex];
+    }
+
+    function prevImage() {
+      const allImages = product.images || [];
+      if (allImages.length === 0) return;
+      currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+      document.getElementById("mainImage").src = allImages[currentImageIndex];
+    }
+
+    document.addEventListener("click", (e) => {
+      if (e.target.id === "mainImage") {
+        e.target.classList.toggle("zoomed");
+      }
+    });
+
+    function selectSize(btn) {
+      document.querySelectorAll(".sizes button").forEach(b => b.classList.remove("active", "error"));
+      btn.classList.add("active");
+    }
+
+    function changeQty(n) {
+      const input = document.getElementById("quantity");
+      let q = parseInt(input.value) + n;
+      if (q < 1) q = 1;
+      input.value = q;
+    }
+
+    // ✅ Fixed quantity logic, consistent field name
+    function addToCart() {
+      const selected = document.querySelector(".sizes button.active");
+      if (!selected) {
+        document.querySelectorAll(".sizes button").forEach(b => b.classList.add("error"));
+        alert("⚠️ Please select a size before adding to cart!");
+        return;
+      }
+
+      const selectedSize = selected.textContent.trim();
+      const quantity = parseInt(document.getElementById("quantity").value);
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+      // Check if same product + same size already exists
+      const existingItem = cart.find(item => item._id === product._id && item.size === selectedSize);
+
+      if (existingItem) {
+        existingItem.quantity += quantity; // ✅ increase existing quantity
+      } else {
+        cart.push({
+          _id: product._id,
+          name: product.name,
+          price: product.price,
+          image: product.images?.[0] || "",
+          size: selectedSize,
+          quantity, // ✅ standard field
+        });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert("✅ Added to Cart!");
+      location.href = "cart.html";
+    }
+
+    async function loadSimilar() {
+      const res = await fetch("https://reacher-backend-production.up.railway.app/api/products");
+      const data = await res.json();
+      const similar = data.filter(p => p._id !== id && p.type !== "ad").slice(0, 4);
+      document.getElementById("similarGrid").innerHTML = similar
+        .map(
+          p => `
+          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'">
+            <img src="${p.images?.[0] || ''}" alt="${p.name}">
+            <h4>${p.name}</h4>
+            <p>₹${p.price}</p>
+          </div>`
+        )
+        .join("");
+    }
+
+    loadProduct();
+  </script>
+</body>
+</html>

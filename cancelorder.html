@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cancel Order</title>
+<style>
+  body {
+    background-color: #000;
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .container {
+    background-color: #1a1a1a;
+    padding: 50px;
+    border-radius: 8px;
+    border: 2px solid #cc0000;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(204, 0, 0, 0.3);
+  }
+  h2 {
+    text-align: center;
+    color: #cc0000;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    font-size: 22px;
+  }
+  label {
+    display: block;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #fff;
+  }
+  input {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 8px;
+    border: 1.5px solid #cc0000;
+    border-radius: 4px;
+    background-color: #333;
+    color: #fff;
+    font-size: 14px;
+  }
+  button {
+    margin-top: 30px;
+    width: 100%;
+    padding: 14px;
+    background-color: #cc0000;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  button:hover {
+    background-color: #990000;
+  }
+  .message {
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #eee;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h2>Cancel Order</h2>
+  <form id="cancelForm">
+    <label for="info">Enter Email, Phone or Order ID</label>
+    <input type="text" id="info" name="info" placeholder="Email, Phone or Order ID" required />
+
+    <button type="submit">Cancel Order</button>
+  </form>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+  document.getElementById('cancelForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const orderInfo = e.target.info.value.trim();
+    const messageEl = document.getElementById('message');
+    messageEl.style.color = "#eee";
+    messageEl.textContent = "Processing...";
+
+    try {
+      const response = await fetch('https://reacher-backend-production.up.railway.app/api/cancel-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderInfo }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        messageEl.style.color = "#0f0";
+        messageEl.textContent = result.message;
+      } else {
+        messageEl.style.color = "#f33";
+        messageEl.textContent = result.message || 'Failed to cancel order.';
+      }
+    } catch (error) {
+      messageEl.style.color = "#f33";
+      messageEl.textContent = "Error sending request.";
+      console.error(error);
+    }
+  });
+</script>
+</body>
+</html>

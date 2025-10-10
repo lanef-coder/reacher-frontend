@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Delivery Address | Reacher Stitch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: #0b0b0b;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      background: #111;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 15px 25px;
+      border-bottom: 2px solid #ff0000;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ff0000;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    header nav {
+      position: absolute;
+      right: 25px;
+    }
+
+    header nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    header nav a:hover {
+      color: #ff0000;
+    }
+
+    /* FORM CONTAINER */
+    .container {
+      max-width: 600px;
+      background: #141414;
+      margin: 40px auto;
+      padding: 30px 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #ff0000;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #ddd;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 10px 12px;
+      margin-bottom: 15px;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #0b0b0b;
+      color: #fff;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #ff0000;
+    }
+
+    textarea {
+      resize: none;
+      height: 70px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      font-weight: 700;
+      background: #ff0000;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
+      text-transform: uppercase;
+    }
+
+    .btn:hover {
+      background: #cc0000;
+    }
+
+    .location-btn {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 6px;
+      display: block;
+      margin: 0 auto 10px;
+      transition: 0.3s;
+    }
+
+    .location-btn:hover {
+      background: #444;
+    }
+
+    .location-status {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      min-height: 20px;
+      margin-bottom: 10px;
+    }
+
+    .note {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <h1>Reacher Stitch</h1>
+    <nav>
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <!-- ADDRESS FORM -->
+  <div class="container">
+    <h2>Delivery Address</h2>
+    <form id="addressForm">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" required />
+
+      <label for="phone">Phone Number *</label>
+      <input type="tel" id="phone" pattern="[0-9]{10}" required placeholder="10-digit number" />
+
+      <label for="email">Email *</label>
+      <input type="email" id="email" required />
+
+      <label for="address1">Address Line 1 *</label>
+      <textarea id="address1" required></textarea>
+
+      <label for="address2">Address Line 2 (Optional)</label>
+      <textarea id="address2"></textarea>
+
+      <label for="city">City *</label>
+      <input type="text" id="city" required />
+
+      <label for="state">State *</label>
+      <input type="text" id="state" required />
+
+      <label for="pincode">Pincode *</label>
+      <input type="text" id="pincode" pattern="[0-9]{6}" required />
+
+      <button type="button" class="location-btn" onclick="detectLocation()">Use Current Location</button>
+      <div id="locationStatus" class="location-status"></div>
+
+      <button type="submit" class="btn">Proceed to Payment</button>
+    </form>
+    <p class="note">All fields marked * are mandatory. Prepaid orders only.</p>
+  </div>
+
+  <script>
+    const statusEl = document.getElementById("locationStatus");
+
+    async function detectLocation() {
+      if (!navigator.geolocation) {
+        statusEl.textContent = "Geolocation not supported by your browser.";
+        statusEl.style.color = "#ff6666";
+        return;
+      }
+
+      statusEl.textContent = "Detecting location...";
+      statusEl.style.color = "#999";
+
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await res.json();
+          document.getElementById("address1").value = data.display_name || "";
+          document.getElementById("city").value =
+            data.address.city || data.address.town || data.address.village || "";
+          document.getElementById("state").value = data.address.state || "";
+          document.getElementById("pincode").value = data.address.postcode || "";
+
+          statusEl.textContent = "Location detected and filled successfully.";
+          statusEl.style.color = "#00ff7f";
+        } catch {
+          statusEl.textContent = "Unable to fetch address details.";
+          statusEl.style.color = "#ff6666";
+        }
+      }, () => {
+        statusEl.textContent = "Permission denied or location unavailable.";
+        statusEl.style.color = "#ff6666";
+      });
+    }
+
+    document.getElementById("addressForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const address = {
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        address1: document.getElementById("address1").value.trim(),
+        address2: document.getElementById("address2").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        state: document.getElementById("state").value.trim(),
+        pincode: document.getElementById("pincode").value.trim(),
+      };
+
+      for (const [key, value] of Object.entries(address)) {
+        if (key !== "address2" && !value) {
+          alert("Please fill all required fields.");
+          return;
+        }
+      }
+
+      localStorage.setItem("userAddress", JSON.stringify(address));
+      window.location.href = "payment.html";
+    });
+  </script>
+</body>
+</html>
