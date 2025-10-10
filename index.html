@@ -173,12 +173,12 @@ async function loadProducts(){
       slidesContainer.style.transform=`translateX(-${currentSlide*100}%)`;
     },10000);
 
-    // ✅ Products
+    // ✅ Products (with ₹ symbol)
     document.getElementById("productGrid").innerHTML=tees.map(p=>`
       <div class="product">
-        <img src="${p.images && p.images.length ? p.images[0] : ''}" alt="${p.name}">
+        <img src="${p.images && p.images.length ? p.images[0].replace('http://localhost:5000', backendURL) : ''}" alt="${p.name}">
         <h3>${p.name}</h3>
-        <p>${p.price}</p>
+        <p>₹${p.price}</p>
         <button class="buy-btn" onclick="location.href='productdetail.html?id=${p._id}'">Buy Now</button>
       </div>`).join("");
   }catch(e){
