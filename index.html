@@ -4,12 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REACHER STITCH</title>
-
-  <!-- Favicon -->
   <link rel="icon" href="logo.png" type="image/png" />
 
-  <!-- Fonts & Icons -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
@@ -17,7 +16,7 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+      font-family: "Poppins", sans-serif;
     }
 
     body {
@@ -40,8 +39,6 @@
     }
 
     .logo {
-      flex: 1;
-      text-align: center;
       color: #ff0000;
       font-size: 26px;
       font-weight: 700;
@@ -49,7 +46,7 @@
     }
 
     .material-icons {
-      font-size: 30px;
+      font-size: 28px;
       cursor: pointer;
       color: #fff;
       transition: color 0.3s;
@@ -59,7 +56,7 @@
       color: #ff0000;
     }
 
-    /* SIDEBAR MENU */
+    /* SIDEBAR */
     .side-menu {
       position: fixed;
       top: 0;
@@ -88,13 +85,11 @@
 
     .side-menu a:hover {
       background: #ff0000;
-      color: #fff;
     }
 
     /* SLIDER */
     .slider {
       width: 100%;
-      height: 55vh;
       overflow: hidden;
       position: relative;
       background: #000;
@@ -103,39 +98,35 @@
     .slides {
       display: flex;
       width: 100%;
-      height: 100%;
       transition: transform 0.8s ease-in-out;
     }
 
     .slides img {
       width: 100%;
-      height: 100%;
+      height: auto;
       object-fit: cover;
-      flex-shrink: 0;
+      display: block;
     }
 
     /* PRODUCT SECTION */
     .product-section {
-      margin-top: 30px;
+      margin-top: 40px;
       padding: 0 20px;
-      max-width: 1400px;
-      margin-left: auto;
-      margin-right: auto;
+      max-width: 1300px;
+      margin: 40px auto;
     }
 
     .product-title {
       font-size: 26px;
       font-weight: 700;
       margin-bottom: 25px;
-      color: #fff;
       text-align: center;
-      letter-spacing: 1px;
+      color: #fff;
     }
 
-    /* PRODUCT GRID (5 PER ROW) */
     .product-slider {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 25px;
       justify-items: center;
     }
@@ -145,11 +136,12 @@
       background: #161616;
       border: 1px solid #2b2b2b;
       border-radius: 12px;
-      width: 240px;
-      height: 300px;
-      text-align: center;
+      width: 100%;
+      max-width: 280px;
       overflow: hidden;
       transition: 0.3s;
+      display: flex;
+      flex-direction: column;
     }
 
     .product:hover {
@@ -160,14 +152,23 @@
 
     .product img {
       width: 100%;
-      height: 70%;
-      object-fit: contain;
-      background: #0d0d0d;
+      height: 360px;
+      object-fit: cover;
+      background: #0b0b0b;
+      border-bottom: 1px solid #222;
+    }
+
+    .product-content {
+      padding: 12px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 6px;
     }
 
     .product h3 {
-      font-size: 14px;
-      margin-top: 5px;
+      font-size: 15px;
       font-weight: 700;
       color: #fff;
       text-transform: uppercase;
@@ -177,20 +178,18 @@
       color: #ff3333;
       font-weight: 700;
       font-size: 16px;
-      margin: 4px 0 8px;
-      letter-spacing: 0.5px;
     }
 
+    /* BUY NOW BUTTON */
     .buy-btn {
       background: #ff0000;
       color: #fff;
-      padding: 8px 16px;
       border: none;
-      cursor: pointer;
-      text-transform: uppercase;
-      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 6px;
       font-weight: 600;
-      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 6px;
       transition: background 0.3s;
     }
 
@@ -198,67 +197,26 @@
       background: #cc0000;
     }
 
-    /* RESPONSIVE ADJUSTMENTS */
-    @media (max-width: 1200px) {
-      .product {
-        width: 220px;
-        height: 280px;
-      }
-    }
-
+    /* RESPONSIVE */
     @media (max-width: 992px) {
-      .product-slider {
-        grid-template-columns: repeat(3, 1fr);
-      }
-      .product {
-        width: 200px;
-        height: 260px;
+      .product img {
+        height: 300px;
       }
     }
 
     @media (max-width: 768px) {
-      .slider {
-        height: 45vh;
-      }
-      .product-slider {
-        grid-template-columns: repeat(2, 1fr);
-      }
-      .product {
-        width: 180px;
-        height: 240px;
-      }
-      .product h3 {
-        font-size: 13px;
-      }
-      .product p {
-        font-size: 14px;
+      .product img {
+        height: 260px;
       }
     }
 
     @media (max-width: 480px) {
-      .slider {
-        height: 40vh;
-      }
-      .logo {
-        font-size: 20px;
-      }
-      .product-slider {
-        grid-template-columns: 1fr 1fr;
-      }
-      .product {
-        width: 160px;
-        height: 210px;
-      }
-      .product h3 {
-        font-size: 12px;
-      }
-      .product p {
-        font-size: 13px;
+      .product img {
+        height: 220px;
       }
     }
   </style>
 </head>
-
 <body>
   <!-- HEADER -->
   <header>
@@ -282,7 +240,7 @@
     <div class="slides" id="slidesContainer"></div>
   </div>
 
-  <!-- PRODUCT GRID -->
+  <!-- PRODUCTS -->
   <section class="product-section">
     <h2 class="product-title">Latest Collection</h2>
     <div class="product-slider" id="productSlider"></div>
@@ -292,6 +250,7 @@
     const menuBtn = document.getElementById("menuBtn");
     const sideMenu = document.getElementById("sideMenu");
     menuBtn.addEventListener("click", () => sideMenu.classList.toggle("active"));
+
     document.getElementById("cartBtn").onclick = () => location.href = "cart.html";
 
     const backendURL = "https://reacher-backend-production.up.railway.app";
@@ -304,7 +263,7 @@
         const ads = data.filter(i => i.type === "ad");
         const tees = data.filter(i => !i.type || i.type === "tee");
 
-        // Ads Slider
+        // SLIDER
         const slidesContainer = document.getElementById("slidesContainer");
         slidesContainer.innerHTML = ads.map(a => `
           <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
@@ -314,24 +273,29 @@
         if (ads.length > 1) {
           setInterval(() => {
             currentSlide = (currentSlide + 1) % ads.length;
-            slidesContainer.style.transform = `translateX(-${currentSlide * 100}%)`;
+            slidesContainer.style.transform = "translateX(-" + currentSlide * 100 + "%)";
           }, 5000);
         }
 
-        // Product Cards
+        // PRODUCTS
         const productSlider = document.getElementById("productSlider");
         productSlider.innerHTML = tees.map(p => `
           <div class="product">
             <img src="${p.images?.[0]?.replace('http://localhost:5000', backendURL) || ''}" alt="${p.name}">
-            <h3>${p.name}</h3>
-            <p>₹${p.price}</p>
-            <button class="buy-btn" onclick="location.href='productdetail.html?id=${p._id}'">Buy Now</button>
+            <div class="product-content">
+              <h3>${p.name}</h3>
+              <p>₹${p.price}</p>
+              <button class="buy-btn" onclick="buyNow('${p._id}')">Buy Now</button>
+            </div>
           </div>
         `).join("");
-
       } catch (e) {
         console.error("❌ Failed to load products:", e);
       }
+    }
+
+    function buyNow(productId) {
+      location.href = `productdetail.html?id=${productId}`;
     }
 
     loadProducts();
