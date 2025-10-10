@@ -1,124 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Product Details | Reacher Stitch</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details | Reacher Stitch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
-  body { background: #0b0b0b; color: #fff; overflow-x: hidden; }
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    body { background: #0b0b0b; color: #fff; overflow-x: hidden; }
 
-  header {
-    background: #111;
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 25px;
-    border-bottom: 2px solid #ff0000;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-  }
+    /* HEADER */
+    header {
+      background: #111;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 25px;
+      border-bottom: 2px solid #ff0000;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+    header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ff0000;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+    nav a:hover { color: #ff0000; }
 
-  header h1 {
-    font-size: 22px;
-    font-weight: 800;
-    color: #ff0000;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
+    /* CONTAINER */
+    .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
 
-  nav a {
-    color: white;
-    text-decoration: none;
-    margin-left: 20px;
-    font-weight: 500;
-    transition: 0.3s;
-  }
-  nav a:hover { color: #ff0000; }
+    /* IMAGE VIEWER */
+    .image-viewer {
+      position: relative;
+      width: 100%;
+      max-width: 550px;
+      margin: 0 auto;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #222;
+      background: #000;
+    }
+    .image-viewer img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+      transition: transform 0.3s;
+      cursor: zoom-in;
+    }
+    .image-viewer img.zoomed { transform: scale(1.5); cursor: zoom-out; }
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: #fff;
+      font-size: 26px;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 50%;
+      z-index: 10;
+    }
+    .arrow.left { left: 10px; }
+    .arrow.right { right: 10px; }
 
-  .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
+    /* PRODUCT INFO */
+    .info { text-align: center; margin-top: 25px; }
+    .product-title { font-size: 24px; font-weight: 700; color: #fff; margin-top: 15px; }
+    .price { font-size: 28px; font-weight: 800; color: #ff3b3b; margin: 15px 0 25px; }
 
-  .image-viewer {
-    position: relative;
-    width: 100%;
-    max-width: 550px;
-    margin: 0 auto;
-    border-radius: 10px;
-    overflow: hidden;
-    border: 1px solid #222;
-    background: #000;
-  }
+    .sizes { margin: 25px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+    .sizes button {
+      background: #222;
+      color: #fff;
+      border: 2px solid #555;
+      padding: 10px 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    .sizes button:hover { border-color: #ff0000; }
+    .sizes button.active { border-color: #00ff7f; }
+    .sizes button.error { border-color: #ff0000; }
 
-  .image-viewer img { width: 100%; height: auto; display: block; object-fit: cover; transition: transform 0.3s; cursor: zoom-in; }
-  .image-viewer img.zoomed { transform: scale(1.5); cursor: zoom-out; }
+    .qty {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin: 20px 0 30px;
+    }
+    .qty button {
+      background: #333;
+      color: white;
+      width: 38px;
+      height: 38px;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      font-weight: 700;
+      border-radius: 5px;
+    }
+    .qty input {
+      width: 55px;
+      text-align: center;
+      border: none;
+      background: #111;
+      color: #fff;
+      font-weight: 700;
+      font-size: 17px;
+    }
 
-  .arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.5);
-    border: none;
-    color: #fff;
-    font-size: 26px;
-    padding: 8px 12px;
-    cursor: pointer;
-    border-radius: 50%;
-    z-index: 10;
-  }
-  .arrow.left { left: 10px; }
-  .arrow.right { right: 10px; }
+    .add-cart {
+      background: #ff0000;
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      font-weight: 700;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: 0.3s;
+    }
+    .add-cart:hover { background: #cc0000; }
 
-  .info { text-align: center; margin-top: 25px; }
-  .product-title { font-size: 24px; font-weight: 700; color: #fff; margin-top: 15px; }
-  .price { font-size: 28px; font-weight: 800; color: #ff3b3b; margin: 15px 0 25px; }
+    .desc { margin-top: 35px; color: #bbb; line-height: 1.7; text-align: left; }
 
-  .sizes { margin: 25px 0; }
-  .sizes button {
-    background: #222; color: #fff; border: 2px solid #555;
-    margin: 6px; padding: 10px 20px; font-weight: 600;
-    cursor: pointer; transition: all 0.3s; border-radius: 6px; font-size: 15px;
-  }
-  .sizes button:hover { border-color: #ff0000; }
-  .sizes button.active { border-color: #00ff7f; }
-  .sizes button.error { border-color: #ff0000; }
+    /* SIMILAR PRODUCTS */
+    .similar { margin-top: 60px; }
+    .similar h3 { font-size: 22px; color: #ff0000; margin-bottom: 20px; }
+    .similar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+    }
+    .similar-item {
+      background: #161616;
+      border: 1px solid #2b2b2b;
+      text-align: center;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      border-radius: 8px;
+    }
+    .similar-item:hover { transform: translateY(-5px); border-color: #ff0000; }
+    .similar-item img { width: 100%; aspect-ratio: 1/1.2; object-fit: cover; border-radius: 6px; }
+    .similar-item h4 { font-size: 14px; margin-top: 8px; }
+    .similar-item p { color: #ff3333; font-weight: 700; margin: 4px 0; }
 
-  .qty { display: flex; justify-content: center; align-items: center; gap: 12px; margin: 20px 0 30px; }
-  .qty button {
-    background: #333; color: white; width: 38px; height: 38px;
-    border: none; font-size: 20px; cursor: pointer; font-weight: 700; border-radius: 5px;
-  }
-  .qty input { width: 55px; text-align: center; border: none; background: #111; color: #fff; font-weight: 700; font-size: 17px; }
+    /* TOASTS */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2000;
+    }
+    .toast {
+      backdrop-filter: blur(10px);
+      color: #fff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      animation: fadeIn 0.3s ease;
+      min-width: 220px;
+      text-align: center;
+    }
+    .toast.success { background: rgba(0, 255, 127, 0.15); border: 1px solid #00ff7f; box-shadow: 0 0 15px #00ff7f44; }
+    .toast.error { background: rgba(255, 0, 0, 0.15); border: 1px solid #ff3333; box-shadow: 0 0 15px #ff333344; }
 
-  .add-cart {
-    background: #ff0000; color: white; border: none;
-    padding: 14px 40px; font-weight: 700; border-radius: 6px;
-    font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s;
-  }
-  .add-cart:hover { background: #cc0000; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-  .desc { margin-top: 35px; color: #bbb; line-height: 1.7; text-align: left; }
-
-  .similar { margin-top: 60px; }
-  .similar h3 { font-size: 22px; color: #ff0000; margin-bottom: 20px; }
-
-  .similar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; }
-
-  .similar-item {
-    background: #161616; border: 1px solid #2b2b2b; text-align: center;
-    padding: 10px; cursor: pointer; transition: 0.3s;
-  }
-  .similar-item:hover { transform: translateY(-5px); border-color: #ff0000; }
-
-  .similar-item img { width: 100%; aspect-ratio: 1/1.2; object-fit: cover; }
-  .similar-item h4 { font-size: 14px; margin-top: 8px; }
-  .similar-item p { color: #ff3333; font-weight: 700; margin: 4px 0; }
-
-  @media (max-width: 768px) { .add-cart { width: 100%; } }
-</style>
+    @media (max-width: 768px) {
+      header h1 { font-size: 18px; }
+      nav a { margin-left: 10px; font-size: 14px; }
+      .product-title { font-size: 20px; }
+      .price { font-size: 22px; }
+      .add-cart { width: 100%; font-size: 15px; }
+      .desc { font-size: 14px; }
+    }
+  </style>
 </head>
 
 <body>
@@ -160,11 +244,27 @@
     </div>
   </div>
 
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     let product = null;
     let currentImageIndex = 0;
+
+    function showToast(message, type = "success") {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.remove(), 400);
+      }, 2000);
+    }
 
     async function loadProduct() {
       const res = await fetch(`https://reacher-backend-production.up.railway.app/api/products/${id}`);
@@ -219,12 +319,11 @@
       input.value = q;
     }
 
-    // ✅ Fixed quantity logic, consistent field name
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
         document.querySelectorAll(".sizes button").forEach(b => b.classList.add("error"));
-        alert("⚠️ Please select a size before adding to cart!");
+        showToast("⚠️ Please select a size!", "error");
         return;
       }
 
@@ -232,11 +331,10 @@
       const quantity = parseInt(document.getElementById("quantity").value);
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-      // Check if same product + same size already exists
       const existingItem = cart.find(item => item._id === product._id && item.size === selectedSize);
 
       if (existingItem) {
-        existingItem.quantity += quantity; // ✅ increase existing quantity
+        existingItem.quantity += quantity;
       } else {
         cart.push({
           _id: product._id,
@@ -244,13 +342,13 @@
           price: product.price,
           image: product.images?.[0] || "",
           size: selectedSize,
-          quantity, // ✅ standard field
+          quantity,
         });
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
-      alert("✅ Added to Cart!");
-      location.href = "cart.html";
+      showToast("✅ Added to cart successfully!", "success");
+      setTimeout(() => (location.href = "cart.html"), 1000);
     }
 
     async function loadSimilar() {
