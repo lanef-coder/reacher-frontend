@@ -5,11 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REACHER STITCH</title>
 
-  <!-- Favicon -->
-  <link rel="icon" href="logo.png" type="image/png" />
-
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
@@ -17,12 +14,12 @@
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
     }
 
     body {
       background: #0b0b0b;
       color: #fff;
+      font-family: 'Poppins', sans-serif;
       overflow-x: hidden;
     }
 
@@ -40,29 +37,65 @@
     }
 
     .logo {
-      text-align: center;
-      color: #ff0000;
-      font-size: 26px;
+      font-family: 'Playfair Display', serif;
       font-weight: 700;
-      letter-spacing: 3px;
+      font-size: 28px;
+      color: #ff0000;
+      letter-spacing: 2px;
     }
 
     .material-icons {
-      font-size: 30px;
+      font-size: 28px;
       cursor: pointer;
       color: #fff;
-      transition: color 0.3s;
+      transition: 0.3s;
     }
 
     .material-icons:hover {
       color: #ff0000;
     }
 
-    /* SIDEBAR MENU */
+    /* BOX BAG STYLE CART */
+    #cartContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: transparent;
+    }
+
+    #cartContainer:hover {
+      background: #ff0000;
+      border-color: #ff0000;
+    }
+
+    #cartContainer .material-icons {
+      font-size: 26px;
+      color: #fff;
+    }
+
+    #cartCount {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #ff0000;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* SIDEMENU */
     .side-menu {
       position: fixed;
       top: 0;
-      left: -280px;
+      left: -270px;
       width: 260px;
       height: 100%;
       background: #111;
@@ -82,19 +115,28 @@
       color: #fff;
       text-decoration: none;
       border-bottom: 1px solid #222;
+      font-size: 15px;
       transition: background 0.3s;
     }
 
     .side-menu a:hover {
       background: #ff0000;
-      color: #fff;
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      padding: 15px 25px;
+      color: #ff0000;
+      font-weight: 700;
+      border-bottom: 1px solid #222;
+      cursor: pointer;
     }
 
     /* SLIDER */
     .slider {
       width: 100%;
       overflow: hidden;
-      position: relative;
       background: #000;
     }
 
@@ -106,14 +148,32 @@
 
     .slides img {
       width: 100%;
-      height: auto;
-      flex-shrink: 0;
+      height: 70vh;
       object-fit: cover;
-      display: block;
-      background: #000;
+      flex-shrink: 0;
     }
 
-    /* PRODUCT SECTION */
+    /* MOBILE ADS BOX */
+    @media (max-width: 600px) {
+      .slides {
+        display: grid;
+        place-items: center;
+        background: #0b0b0b;
+        padding: 10px;
+      }
+
+      .slides img {
+        width: 95%;
+        height: auto;
+        object-fit: contain;
+        border: 1px solid #333;
+        border-radius: 6px;
+        background: #111;
+        padding: 5px;
+      }
+    }
+
+    /* PRODUCTS */
     .product-section {
       margin-top: 40px;
       padding: 0 20px;
@@ -123,49 +183,46 @@
     }
 
     .product-title {
+      text-align: center;
       font-size: 26px;
       font-weight: 700;
-      margin-bottom: 25px;
       color: #fff;
-      text-align: center;
+      margin-bottom: 25px;
       letter-spacing: 1px;
     }
 
-    /* PRODUCT GRID */
     .product-slider {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 15px;
       justify-items: center;
     }
 
-    /* PRODUCT CARD */
     .product {
       background: #161616;
       border: 1px solid #2b2b2b;
-      border-radius: 12px;
       width: 100%;
-      max-width: 280px;
-      overflow: hidden;
-      transition: 0.3s;
+      max-width: 260px;
       color: #fff;
+      transition: 0.3s;
+      text-align: center;
       display: flex;
       flex-direction: column;
-      text-align: center;
     }
 
     .product:hover {
-      transform: translateY(-6px);
+      transform: translateY(-4px);
       border-color: #ff0000;
-      box-shadow: 0 6px 25px rgba(255, 0, 0, 0.3);
+      box-shadow: 0 6px 18px rgba(255, 0, 0, 0.25);
     }
 
     .product img {
       width: 100%;
-      height: 360px;
-      object-fit: cover;
-      background: #0b0b0b;
+      height: 340px;
+      object-fit: contain;
+      background: #000;
       border-bottom: 1px solid #222;
+      padding: 8px;
     }
 
     .product-content {
@@ -174,30 +231,29 @@
 
     .product h3 {
       font-size: 15px;
-      margin-bottom: 6px;
       font-weight: 700;
-      color: #fff;
+      margin-bottom: 6px;
       text-transform: uppercase;
+      color: #fff;
     }
 
     .product p {
+      font-size: 16px;
       color: #ff3333;
       font-weight: 700;
-      font-size: 16px;
-      margin: 4px 0 8px;
-      letter-spacing: 0.3px;
+      margin-bottom: 8px;
     }
 
     .buy-btn {
       background: #ff0000;
       color: #fff;
-      padding: 8px 16px;
       border: none;
+      padding: 8px 16px;
       cursor: pointer;
       text-transform: uppercase;
       font-size: 13px;
       font-weight: 600;
-      border-radius: 6px;
+      border-radius: 2px;
       transition: background 0.3s;
     }
 
@@ -205,31 +261,18 @@
       background: #cc0000;
     }
 
-    /* RESPONSIVE */
-    @media (max-width: 992px) {
-      .product img {
-        height: 300px;
-      }
-    }
-
-    @media (max-width: 768px) {
-      .product img {
-        height: 260px;
-      }
-    }
-
     @media (max-width: 600px) {
       .product-slider {
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
+        gap: 10px;
+      }
+
+      .product img {
+        height: 220px;
       }
 
       .product {
         max-width: 180px;
-      }
-
-      .product img {
-        height: 200px;
       }
 
       .product h3 {
@@ -245,24 +288,25 @@
         padding: 6px 12px;
       }
     }
-
-    @media (max-width: 400px) {
-      .product img {
-        height: 180px;
-      }
-    }
   </style>
 </head>
+
 <body>
   <!-- HEADER -->
   <header>
     <span class="material-icons" id="menuBtn">menu</span>
     <div class="logo">REACHER STITCH</div>
-    <span class="material-icons" id="cartBtn">shopping_cart</span>
+    <div id="cartContainer" onclick="location.href='cart.html'">
+      <span class="material-icons">shopping_bag</span>
+      <span id="cartCount">0</span>
+    </div>
   </header>
 
-  <!-- SIDEBAR -->
+  <!-- SIDEMENU -->
   <div class="side-menu" id="sideMenu">
+    <div class="back-btn" id="backBtn">
+      <span class="material-icons">arrow_back</span>&nbsp;Back
+    </div>
     <a href="index.html">Home</a>
     <a href="privacypolicy.html">Privacy Policy</a>
     <a href="about.html">About</a>
@@ -285,8 +329,10 @@
   <script>
     const menuBtn = document.getElementById("menuBtn");
     const sideMenu = document.getElementById("sideMenu");
-    menuBtn.addEventListener("click", () => sideMenu.classList.toggle("active"));
-    document.getElementById("cartBtn").onclick = () => location.href = "cart.html";
+    const backBtn = document.getElementById("backBtn");
+
+    menuBtn.addEventListener("click", () => sideMenu.classList.add("active"));
+    backBtn.addEventListener("click", () => sideMenu.classList.remove("active"));
 
     const backendURL = "https://reacher-backend-production.up.railway.app";
 
@@ -298,21 +344,26 @@
         const ads = data.filter(i => i.type === "ad");
         const tees = data.filter(i => !i.type || i.type === "tee");
 
-        // Ads Slider
         const slidesContainer = document.getElementById("slidesContainer");
-        slidesContainer.innerHTML = ads.map(a => `
-          <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
-        `).join("");
+
+        if (window.innerWidth > 600) {
+          slidesContainer.innerHTML = ads.map(a => `
+            <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
+          `).join("");
+        } else {
+          slidesContainer.innerHTML = ads.map(a => `
+            <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
+          `).join("");
+        }
 
         let currentSlide = 0;
-        if (ads.length > 1) {
+        if (ads.length > 1 && window.innerWidth > 600) {
           setInterval(() => {
             currentSlide = (currentSlide + 1) % ads.length;
             slidesContainer.style.transform = "translateX(-" + currentSlide * 100 + "%)";
           }, 5000);
         }
 
-        // Product Cards
         const productSlider = document.getElementById("productSlider");
         productSlider.innerHTML = tees.map(p => `
           <div class="product">
