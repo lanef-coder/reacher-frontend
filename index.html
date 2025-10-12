@@ -10,11 +10,7 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: #0b0b0b;
@@ -55,13 +51,12 @@
       color: #ff0000;
     }
 
-    /* BOX BAG STYLE CART */
+    /* CART (no white border now) */
     #cartContainer {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid #fff;
       padding: 6px 10px;
       border-radius: 6px;
       cursor: pointer;
@@ -71,7 +66,6 @@
 
     #cartContainer:hover {
       background: #ff0000;
-      border-color: #ff0000;
     }
 
     #cartContainer .material-icons {
@@ -105,9 +99,7 @@
       padding-top: 60px;
     }
 
-    .side-menu.active {
-      left: 0;
-    }
+    .side-menu.active { left: 0; }
 
     .side-menu a {
       display: block;
@@ -119,9 +111,7 @@
       transition: background 0.3s;
     }
 
-    .side-menu a:hover {
-      background: #ff0000;
-    }
+    .side-menu a:hover { background: #ff0000; }
 
     .back-btn {
       display: flex;
@@ -138,12 +128,13 @@
       width: 100%;
       overflow: hidden;
       background: #000;
+      position: relative;
     }
 
     .slides {
       display: flex;
+      transition: transform 1s ease-in-out;
       width: 100%;
-      transition: transform 0.8s ease-in-out;
     }
 
     .slides img {
@@ -153,17 +144,15 @@
       flex-shrink: 0;
     }
 
-    /* MOBILE ADS BOX */
+    /* MOBILE ADS STYLE */
     @media (max-width: 600px) {
       .slides {
-        display: grid;
-        place-items: center;
-        background: #0b0b0b;
-        padding: 10px;
+        display: flex;
+        width: 100%;
       }
 
       .slides img {
-        width: 95%;
+        width: 100%;
         height: auto;
         object-fit: contain;
         border: 1px solid #333;
@@ -225,16 +214,13 @@
       padding: 8px;
     }
 
-    .product-content {
-      padding: 12px 14px;
-    }
+    .product-content { padding: 12px 14px; }
 
     .product h3 {
       font-size: 15px;
       font-weight: 700;
       margin-bottom: 6px;
       text-transform: uppercase;
-      color: #fff;
     }
 
     .product p {
@@ -257,9 +243,7 @@
       transition: background 0.3s;
     }
 
-    .buy-btn:hover {
-      background: #cc0000;
-    }
+    .buy-btn:hover { background: #cc0000; }
 
     @media (max-width: 600px) {
       .product-slider {
@@ -267,26 +251,11 @@
         gap: 10px;
       }
 
-      .product img {
-        height: 220px;
-      }
-
-      .product {
-        max-width: 180px;
-      }
-
-      .product h3 {
-        font-size: 13px;
-      }
-
-      .product p {
-        font-size: 14px;
-      }
-
-      .buy-btn {
-        font-size: 12px;
-        padding: 6px 12px;
-      }
+      .product img { height: 220px; }
+      .product { max-width: 180px; }
+      .product h3 { font-size: 13px; }
+      .product p { font-size: 14px; }
+      .buy-btn { font-size: 12px; padding: 6px 12px; }
     }
   </style>
 </head>
@@ -345,23 +314,17 @@
         const tees = data.filter(i => !i.type || i.type === "tee");
 
         const slidesContainer = document.getElementById("slidesContainer");
+        slidesContainer.innerHTML = ads.map(a => `
+          <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
+        `).join("");
 
-        if (window.innerWidth > 600) {
-          slidesContainer.innerHTML = ads.map(a => `
-            <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
-          `).join("");
-        } else {
-          slidesContainer.innerHTML = ads.map(a => `
-            <img src="${a.images[0].replace('http://localhost:5000', backendURL)}" alt="${a.name}">
-          `).join("");
-        }
-
+        // Auto-slide for all screen sizes
         let currentSlide = 0;
-        if (ads.length > 1 && window.innerWidth > 600) {
+        if (ads.length > 1) {
           setInterval(() => {
             currentSlide = (currentSlide + 1) % ads.length;
             slidesContainer.style.transform = "translateX(-" + currentSlide * 100 + "%)";
-          }, 5000);
+          }, 4000);
         }
 
         const productSlider = document.getElementById("productSlider");

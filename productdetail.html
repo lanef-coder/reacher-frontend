@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details | Reacher Stitch</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
@@ -17,27 +18,56 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px 25px;
-      border-bottom: 2px solid #ff0000;
+      padding: 12px 20px;
+      border-bottom: 1px solid #222;
       position: sticky;
       top: 0;
       z-index: 1000;
     }
-    header h1 {
-      font-size: 22px;
+
+    .logo {
       font-weight: 800;
+      font-size: 22px;
       color: #ff0000;
-      text-transform: uppercase;
       letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 0 auto;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin-left: 20px;
-      font-weight: 500;
+
+    #cartContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff;
+      padding: 5px 9px;
+      border-radius: 6px;
+      cursor: pointer;
       transition: 0.3s;
+      background: transparent;
     }
-    nav a:hover { color: #ff0000; }
+
+    #cartContainer:hover {
+      background: #ff0000;
+      border-color: #ff0000;
+    }
+
+    #cartContainer .material-icons {
+      font-size: 26px;
+      color: #fff;
+    }
+
+    #cartCount {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #ff0000;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
 
     /* CONTAINER */
     .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
@@ -165,38 +195,41 @@
     .similar-item h4 { font-size: 14px; margin-top: 8px; }
     .similar-item p { color: #ff3333; font-weight: 700; margin: 4px 0; }
 
-    /* TOASTS */
+    /* MODERN TOASTS */
     .toast-container {
       position: fixed;
       top: 20px;
       right: 20px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      z-index: 2000;
+      gap: 12px;
+      z-index: 3000;
     }
-    .toast {
-      backdrop-filter: blur(10px);
-      color: #fff;
-      padding: 14px 20px;
-      border-radius: 10px;
-      font-weight: 600;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-      animation: fadeIn 0.3s ease;
-      min-width: 220px;
-      text-align: center;
-    }
-    .toast.success { background: rgba(0, 255, 127, 0.15); border: 1px solid #00ff7f; box-shadow: 0 0 15px #00ff7f44; }
-    .toast.error { background: rgba(255, 0, 0, 0.15); border: 1px solid #ff3333; box-shadow: 0 0 15px #ff333344; }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
+    .toast {
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      opacity: 0;
+      transform: translateY(-10px);
+      animation: slideIn 0.4s forwards;
+    }
+
+    .toast.success { border-left: 5px solid #00ff7f; }
+    .toast.error { border-left: 5px solid #ff3333; }
+
+    @keyframes slideIn {
       to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 768px) {
-      header h1 { font-size: 18px; }
-      nav a { margin-left: 10px; font-size: 14px; }
+      .logo { font-size: 18px; }
+      #cartContainer .material-icons { font-size: 24px; }
       .product-title { font-size: 20px; }
       .price { font-size: 22px; }
       .add-cart { width: 100%; font-size: 15px; }
@@ -207,11 +240,11 @@
 
 <body>
   <header>
-    <h1>Reacher Stitch</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="cart.html">Cart</a>
-    </nav>
+    <div class="logo">Reacher Stitch</div>
+    <div id="cartContainer" onclick="location.href='cart.html'">
+      <span class="material-icons">shopping_bag</span>
+      <span id="cartCount">0</span>
+    </div>
   </header>
 
   <div class="container">
@@ -244,7 +277,6 @@
     </div>
   </div>
 
-  <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
@@ -259,9 +291,9 @@
       toast.className = `toast ${type}`;
       toast.textContent = message;
       container.appendChild(toast);
-
       setTimeout(() => {
         toast.style.opacity = "0";
+        toast.style.transform = "translateY(-10px)";
         setTimeout(() => toast.remove(), 400);
       }, 2000);
     }
@@ -302,9 +334,7 @@
     }
 
     document.addEventListener("click", (e) => {
-      if (e.target.id === "mainImage") {
-        e.target.classList.toggle("zoomed");
-      }
+      if (e.target.id === "mainImage") e.target.classList.toggle("zoomed");
     });
 
     function selectSize(btn) {
@@ -323,7 +353,7 @@
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
         document.querySelectorAll(".sizes button").forEach(b => b.classList.add("error"));
-        showToast("⚠️ Please select a size!", "error");
+        showToast("Please select a size!", "error");
         return;
       }
 
@@ -347,7 +377,7 @@
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
-      showToast("✅ Added to cart successfully!", "success");
+      showToast("Added to cart!", "success");
       setTimeout(() => (location.href = "cart.html"), 1000);
     }
 
