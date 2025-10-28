@@ -76,7 +76,7 @@
       color: #ddd;
     }
 
-    input, textarea, select {
+    input, textarea {
       width: 100%;
       padding: 10px 12px;
       margin-bottom: 15px;
@@ -89,7 +89,7 @@
       transition: border 0.3s;
     }
 
-    input:focus, textarea:focus, select:focus {
+    input:focus, textarea:focus {
       border-color: #ff0000;
     }
 
@@ -150,7 +150,6 @@
       margin-top: 10px;
     }
 
-    /* BACK TO CART BUTTON */
     .back-btn {
       background: #333;
       color: white;
@@ -168,7 +167,6 @@
       background: #444;
     }
 
-    /* TOAST NOTIFICATION */
     .toast {
       visibility: hidden;
       min-width: 260px;
@@ -194,6 +192,17 @@
       bottom: 50px;
     }
 
+    .field-error {
+      border-color: #ff4444 !important;
+    }
+
+    .hint {
+      color: #999;
+      font-size: 13px;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
     @media (max-width: 600px) {
       header h1 {
         font-size: 18px;
@@ -207,32 +216,29 @@
 </head>
 
 <body>
-  <!-- HEADER -->
   <header>
     <h1>Reacher Stitch</h1>
-    <nav>
-      <a href="index.html">Home</a>
-    </nav>
+    <nav><a href="index.html">Home</a></nav>
   </header>
 
-  <!-- ADDRESS FORM -->
   <div class="container">
     <h2>Delivery Address</h2>
-    <form id="addressForm">
+    <form id="addressForm" novalidate>
       <label for="name">Full Name *</label>
       <input type="text" id="name" required />
 
-      <label for="phone">Phone Number *</label>
-      <input type="tel" id="phone" pattern="[0-9]{10}" required placeholder="10-digit number" />
+      <label for="phone">Phone Number (India) *</label>
+      <input type="tel" id="phone" required placeholder="10-digit number, e.g. 9876543210" />
 
       <label for="email">Email *</label>
-      <input type="email" id="email" required />
+      <input type="email" id="email" required placeholder="name@example.com" />
+      <div id="emailHint" class="hint">We will validate email and block disposable domains.</div>
 
-      <label for="address1">Address Line 1 *</label>
-      <textarea id="address1" required></textarea>
+      <label for="address1">Address Line 1 — Flat / Building / Apartment *</label>
+      <textarea id="address1" required placeholder="Flat 12B, Building Rosewood"></textarea>
 
-      <label for="address2">Address Line 2 (Optional)</label>
-      <textarea id="address2"></textarea>
+      <label for="address2">Address Line 2 — Landmark / Nearby Location *</label>
+      <textarea id="address2" required placeholder="Near Apollo Hospital or any landmark"></textarea>
 
       <label for="city">City *</label>
       <input type="text" id="city" required />
@@ -241,7 +247,7 @@
       <input type="text" id="state" required />
 
       <label for="pincode">Pincode *</label>
-      <input type="text" id="pincode" pattern="[0-9]{6}" required />
+      <input type="text" id="pincode" pattern="[0-9]{6}" required placeholder="6-digit pincode" />
 
       <button type="button" class="location-btn" onclick="detectLocation()">Use Current Location</button>
       <div id="locationStatus" class="location-status"></div>
@@ -253,18 +259,42 @@
     <p class="note">All fields marked * are mandatory. Prepaid orders only.</p>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="toast"></div>
 
   <script>
-    const statusEl = document.getElementById("locationStatus");
     const toast = document.getElementById("toast");
+    const statusEl = document.getElementById("locationStatus");
+    const addressForm = document.getElementById("addressForm");
 
     function showToast(message, color = "#ff0000") {
       toast.textContent = message;
       toast.style.borderColor = color;
       toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 3000);
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    function normalizePhone(phone) { return (phone || "").replace(/\D/g, ""); }
+    function isValidIndianPhone(phone) { return /^[6-9]\d{9}$/.test(normalizePhone(phone)); }
+    function isSuspiciousPhone(phone) {
+      const p = normalizePhone(phone);
+      if (p.length !== 10) return true;
+      if (/^(\d)\1+$/.test(p)) return true;
+      if ("0123456789012345".includes(p) || "5432109876543210".includes(p)) return true;
+      return false;
+    }
+
+    function isValidEmailFormat(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+      return re.test(email);
+    }
+
+    function isDisposableEmail(email) {
+      const domain = email.split("@")[1]?.toLowerCase() || "";
+      const disposableDomains = [
+        "mailinator.com","tempmail.com","10minutemail.com","yopmail.com","guerrillamail.com",
+        "dispostable.com","trashmail.com","fakeinbox.com","maildrop.cc"
+      ];
+      return disposableDomains.some(d => domain === d || domain.endsWith("." + d));
     }
 
     async function detectLocation() {
@@ -272,7 +302,6 @@
         showToast("Geolocation not supported.", "#ff4444");
         return;
       }
-
       statusEl.textContent = "Detecting location...";
       statusEl.style.color = "#999";
 
@@ -280,50 +309,101 @@
         const { latitude, longitude } = pos.coords;
         try {
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`
           );
           const data = await res.json();
-          document.getElementById("address1").value = data.display_name || "";
-          document.getElementById("city").value =
-            data.address.city || data.address.town || data.address.village || "";
-          document.getElementById("state").value = data.address.state || "";
-          document.getElementById("pincode").value = data.address.postcode || "";
+          const addr = data.address || {};
+          let parts = [];
+          if (addr.house_number) parts.push(addr.house_number);
+          if (addr.building) parts.push(addr.building);
+          if (addr.road) parts.push(addr.road);
+          document.getElementById("address1").value = parts.join(", ") || data.display_name || "";
+
+          const landmark = addr.attraction || addr.landmark || addr.neighbourhood || addr.suburb || addr.village || "";
+          document.getElementById("address2").value = landmark || "";
+
+          document.getElementById("city").value = addr.city || addr.town || addr.village || "";
+          document.getElementById("state").value = addr.state || "";
+          document.getElementById("pincode").value = addr.postcode || "";
 
           showToast("Location detected successfully!", "#00ff7f");
+          statusEl.textContent = "Location detected ✔";
+          statusEl.style.color = "#00ff7f";
         } catch {
           showToast("Unable to fetch address details.", "#ff4444");
         }
-      }, () => {
-        showToast("Permission denied or unavailable.", "#ff4444");
-      });
+      }, () => showToast("Permission denied or unavailable.", "#ff4444"));
     }
 
-    document.getElementById("addressForm").addEventListener("submit", (e) => {
+    function setFieldError(el, on = true) {
+      if (on) el.classList.add("field-error");
+      else el.classList.remove("field-error");
+    }
+
+    addressForm.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      const address = {
-        name: document.getElementById("name").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        address1: document.getElementById("address1").value.trim(),
-        address2: document.getElementById("address2").value.trim(),
-        city: document.getElementById("city").value.trim(),
-        state: document.getElementById("state").value.trim(),
-        pincode: document.getElementById("pincode").value.trim(),
-      };
+      const name = document.getElementById("name");
+      const phone = document.getElementById("phone");
+      const email = document.getElementById("email");
+      const address1 = document.getElementById("address1");
+      const address2 = document.getElementById("address2");
+      const city = document.getElementById("city");
+      const state = document.getElementById("state");
+      const pincode = document.getElementById("pincode");
 
-      for (const [key, value] of Object.entries(address)) {
-        if (key !== "address2" && !value) {
+      [name, phone, email, address1, address2, city, state, pincode].forEach(el => setFieldError(el, false));
+
+      const required = [name, phone, email, address1, address2, city, state, pincode];
+      for (const el of required) {
+        if (!el.value.trim()) {
+          setFieldError(el, true);
           showToast("Please fill all required fields!", "#ff4444");
+          el.focus();
           return;
         }
       }
 
-      localStorage.setItem("userAddress", JSON.stringify(address));
+      const emailVal = email.value.trim();
+      if (!isValidEmailFormat(emailVal)) {
+        setFieldError(email, true);
+        showToast("Invalid email format.", "#ff4444");
+        return;
+      }
+      if (isDisposableEmail(emailVal)) {
+        setFieldError(email, true);
+        showToast("Disposable email not allowed.", "#ff4444");
+        return;
+      }
+
+      const phoneVal = phone.value.trim();
+      if (!isValidIndianPhone(phoneVal) || isSuspiciousPhone(phoneVal)) {
+        setFieldError(phone, true);
+        showToast("Enter a valid 10-digit Indian number.", "#ff4444");
+        return;
+      }
+
+      if (!/^\d{6}$/.test(pincode.value.trim())) {
+        setFieldError(pincode, true);
+        showToast("Invalid 6-digit pincode.", "#ff4444");
+        return;
+      }
+
+      const addressObj = {
+        name: name.value.trim(),
+        phone: normalizePhone(phoneVal),
+        email: emailVal,
+        address1: address1.value.trim(),
+        address2: address2.value.trim(),
+        city: city.value.trim(),
+        state: state.value.trim(),
+        pincode: pincode.value.trim(),
+        savedAt: new Date().toISOString()
+      };
+
+      localStorage.setItem("userAddress", JSON.stringify(addressObj));
       showToast("Address saved! Redirecting...", "#00ff7f");
-      setTimeout(() => {
-        window.location.href = "payment.html";
-      }, 1500);
+      setTimeout(() => { window.location.href = "payment.html"; }, 1200);
     });
   </script>
 </body>
