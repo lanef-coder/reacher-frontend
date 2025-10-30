@@ -346,7 +346,8 @@
       document.getElementById("pprice").textContent = "₹" + product.price;
       document.getElementById("pdesc").textContent = product.description;
 
-      const allImages = product.images || [];
+      // ✅ Filter only valid image URLs
+      const allImages = (product.images || []).filter(img => img && img.trim() !== "");
       const mainImgEl = document.getElementById("mainImage");
       const thumbsContainer = document.getElementById("thumbs");
       thumbsContainer.innerHTML = "";
@@ -374,7 +375,7 @@
     }
 
     function showImage(index) {
-      const allImages = product?.images || [];
+      const allImages = (product?.images || []).filter(img => img && img.trim() !== "");
       if (!allImages.length) return;
       currentImageIndex = (index + allImages.length) % allImages.length;
 
@@ -391,13 +392,13 @@
     }
 
     function nextImage() {
-      const allImages = product?.images || [];
+      const allImages = (product?.images || []).filter(img => img && img.trim() !== "");
       if (!allImages.length) return;
       showImage(currentImageIndex + 1);
     }
 
     function prevImage() {
-      const allImages = product?.images || [];
+      const allImages = (product?.images || []).filter(img => img && img.trim() !== "");
       if (!allImages.length) return;
       showImage(currentImageIndex - 1);
     }
@@ -439,7 +440,7 @@
           _id: product._id,
           name: product.name,
           price: product.price,
-          image: product.images?.[0] || "",
+          image: (product.images?.filter(img => img && img.trim() !== "")[0]) || "",
           size: selectedSize,
           quantity,
         });
@@ -458,7 +459,7 @@
         .map(
           p => `
           <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'">
-            <img src="${p.images?.[0] || ''}" alt="${p.name}">
+            <img src="${(p.images?.filter(img => img && img.trim() !== "")[0]) || ''}" alt="${p.name}">
             <h4>${p.name}</h4>
             <p>₹${p.price}</p>
           </div>`
