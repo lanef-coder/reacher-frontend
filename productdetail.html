@@ -306,7 +306,7 @@
       document.getElementById("pprice").textContent = "₹" + product.price;
       document.getElementById("pdesc").textContent = product.description;
 
-      const allImages = product.images || [];
+      const allImages = (product.images || []).filter(img => img && img.trim() !== "");
       if (allImages.length > 0) {
         document.getElementById("mainImage").src = allImages[0];
       }
@@ -320,17 +320,17 @@
     }
 
     function nextImage() {
-      const allImages = product.images || [];
-      if (allImages.length === 0) return;
-      currentImageIndex = (currentImageIndex + 1) % allImages.length;
-      document.getElementById("mainImage").src = allImages[currentImageIndex];
+      const validImages = (product?.images || []).filter(img => img && img.trim() !== "");
+      if (!validImages.length) return;
+      currentImageIndex = (currentImageIndex + 1) % validImages.length;
+      document.getElementById("mainImage").src = validImages[currentImageIndex];
     }
 
     function prevImage() {
-      const allImages = product.images || [];
-      if (allImages.length === 0) return;
-      currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
-      document.getElementById("mainImage").src = allImages[currentImageIndex];
+      const validImages = (product?.images || []).filter(img => img && img.trim() !== "");
+      if (!validImages.length) return;
+      currentImageIndex = (currentImageIndex - 1 + validImages.length) % validImages.length;
+      document.getElementById("mainImage").src = validImages[currentImageIndex];
     }
 
     document.addEventListener("click", (e) => {
@@ -400,4 +400,4 @@
     loadProduct();
   </script>
 </body>
-</html> 
+</html>
