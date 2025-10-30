@@ -292,14 +292,12 @@
 
       <button class="arrow right" onclick="nextImage()">❯</button>
 
-      <!-- thumbnails container (populated dynamically) -->
       <div class="thumbs" id="thumbs"></div>
     </div>
 
     <div class="info">
       <h2 class="product-title" id="pname"></h2>
       <div class="price" id="pprice"></div>
-
       <div class="sizes" id="psizes"></div>
 
       <div class="qty">
@@ -349,28 +347,22 @@
       document.getElementById("pdesc").textContent = product.description;
 
       const allImages = product.images || [];
-      currentImageIndex = 0;
-
-      // set main image & build thumbs dynamically (only as many images as exist)
       const mainImgEl = document.getElementById("mainImage");
       const thumbsContainer = document.getElementById("thumbs");
       thumbsContainer.innerHTML = "";
 
       if (allImages.length > 0) {
+        currentImageIndex = 0;
         mainImgEl.src = allImages[0];
 
-        // create thumbnails
         thumbsContainer.innerHTML = allImages
           .map((img, index) => `<img src="${img}" alt="thumb${index}" onclick="showImage(${index})">`)
           .join("");
 
-        // mark first thumb active (if present)
         const firstThumb = thumbsContainer.querySelector("img");
         if (firstThumb) firstThumb.classList.add("active");
       } else {
-        // placeholder if no images present
         mainImgEl.src = "";
-        thumbsContainer.innerHTML = "";
       }
 
       const sizeKeys = Object.keys(product.sizes || {}).filter(s => s && s !== "_id");
@@ -381,39 +373,33 @@
       loadSimilar();
     }
 
-    // Change image with fade & update active thumb
     function showImage(index) {
       const allImages = product?.images || [];
       if (!allImages.length) return;
-      index = Math.max(0, Math.min(index, allImages.length - 1));
-      currentImageIndex = index;
+      currentImageIndex = (index + allImages.length) % allImages.length;
 
       const mainImgEl = document.getElementById("mainImage");
-      // fade out, change src, fade in
       mainImgEl.classList.add("fading");
       setTimeout(() => {
-        mainImgEl.src = allImages[index];
+        mainImgEl.src = allImages[currentImageIndex];
         mainImgEl.classList.remove("fading");
       }, 150);
 
-      // update thumb active state
       document.querySelectorAll(".thumbs img").forEach((img, i) => {
-        img.classList.toggle("active", i === index);
+        img.classList.toggle("active", i === currentImageIndex);
       });
     }
 
     function nextImage() {
       const allImages = product?.images || [];
-      if (!allImages || allImages.length === 0) return;
-      currentImageIndex = (currentImageIndex + 1) % allImages.length;
-      showImage(currentImageIndex);
+      if (!allImages.length) return;
+      showImage(currentImageIndex + 1);
     }
 
     function prevImage() {
       const allImages = product?.images || [];
-      if (!allImages || allImages.length === 0) return;
-      currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
-      showImage(currentImageIndex);
+      if (!allImages.length) return;
+      showImage(currentImageIndex - 1);
     }
 
     document.addEventListener("click", (e) => {
