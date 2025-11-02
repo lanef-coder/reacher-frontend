@@ -53,10 +53,11 @@
       font-size: 26px;
       color: #111;
     }
-    #cartCount {
+   #cartCount {
   position: absolute;
-  top: -4px;
-  right: -2px;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%); /* ensures perfect placement */
   background: #ed8439;
   color: #fff;
   border-radius: 50%;
@@ -68,6 +69,7 @@
   line-height: 18px;
   box-shadow: 0 0 5px rgba(0,0,0,0.15);
 }
+
 
     #cartContainer:hover {
       background: #f5ecd7;
