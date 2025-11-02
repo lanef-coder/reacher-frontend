@@ -4,69 +4,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details | ZKRAZE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
-    body { background: #0b0b0b; color: #fff; overflow-x: hidden; }
+    body { background: #fff; color: #111; overflow-x: hidden; }
 
     /* HEADER */
     header {
-      background: #111;
-      color: white;
+      background: #f5ecd7; /* beige */
+      color: #111;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      padding: 12px 20px;
-      border-bottom: 1px solid #222;
+      padding: 15px 20px;
+      border-bottom: 1px solid #f1e6c8;
       position: sticky;
       top: 0;
       z-index: 1000;
+      justify-content: center;
     }
-
     .logo {
-      font-weight: 800;
-      font-size: 22px;
-      color: #ff0000;
-      letter-spacing: 1px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 28px;
+      color: #111;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      margin: 0 auto;
+      text-align: center;
     }
-
     #cartContainer {
-      position: relative;
+      position: absolute;
+      right: 28px;
+      top: 16px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 2px solid #fff;
-      padding: 5px 9px;
       border-radius: 6px;
       cursor: pointer;
       transition: 0.3s;
       background: transparent;
+      padding: 6px 10px;
+      border: 1.8px solid #111;
+      min-width: 41px;
+      min-height: 41px;
     }
-
-    #cartContainer:hover {
-      background: #ff0000;
-      border-color: #ff0000;
-    }
-
     #cartContainer .material-icons {
       font-size: 26px;
-      color: #fff;
+      color: #111;
     }
-
     #cartCount {
       position: absolute;
-      top: -6px;
-      right: -6px;
-      background: #ff0000;
+      top: -8px;
+      right: -8px;
+      background: #ed8439;
       color: #fff;
       border-radius: 50%;
-      padding: 2px 6px;
-      font-size: 12px;
+      padding: 3px 7px;
+      font-size: 13px;
       font-weight: 700;
+      min-width: 18px;
+      text-align: center;
+      line-height: 18px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    }
+    #cartContainer:hover {
+      background: #f5ecd7;
     }
 
     /* CONTAINER */
@@ -80,8 +83,8 @@
       margin: 0 auto;
       border-radius: 10px;
       overflow: hidden;
-      border: 1px solid #222;
-      background: #000;
+      border: 1px solid #ededed;
+      background: #fff;
     }
     .image-viewer img {
       width: 100%;
@@ -96,9 +99,9 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.18);
       border: none;
-      color: #fff;
+      color: #111;
       font-size: 26px;
       padding: 8px 12px;
       cursor: pointer;
@@ -110,14 +113,39 @@
 
     /* PRODUCT INFO */
     .info { text-align: center; margin-top: 25px; }
-    .product-title { font-size: 24px; font-weight: 700; color: #fff; margin-top: 15px; }
-    .price { font-size: 28px; font-weight: 800; color: #ff3b3b; margin: 15px 0 25px; }
+    .product-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #111;
+      margin-top: 15px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .price-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      margin: 15px 0 25px;
+    }
+    .mrp {
+      color: #888;
+      font-size: 20px;
+      text-decoration: line-through;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+    .price {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ed8439;
+    }
 
     .sizes { margin: 25px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .sizes button {
-      background: #222;
-      color: #fff;
-      border: 2px solid #555;
+      background: #f5ecd7;
+      color: #111;
+      border: 2px solid #bca673;
       padding: 10px 20px;
       font-weight: 600;
       cursor: pointer;
@@ -125,8 +153,8 @@
       border-radius: 6px;
       font-size: 15px;
     }
-    .sizes button:hover { border-color: #ff0000; }
-    .sizes button.active { border-color: #00ff7f; }
+    .sizes button:hover { border-color: #ed8439; }
+    .sizes button.active { border-color: #00b894; background: #ececec; }
     .sizes button.error { border-color: #ff0000; }
 
     .qty {
@@ -137,8 +165,8 @@
       margin: 20px 0 30px;
     }
     .qty button {
-      background: #333;
-      color: white;
+      background: #e0d4bc;
+      color: #111;
       width: 38px;
       height: 38px;
       border: none;
@@ -151,14 +179,15 @@
       width: 55px;
       text-align: center;
       border: none;
-      background: #111;
-      color: #fff;
+      background: #f5ecd7;
+      color: #111;
       font-weight: 700;
       font-size: 17px;
+      border-radius: 3px;
     }
 
     .add-cart {
-      background: #ff0000;
+      background: #111;
       color: white;
       border: none;
       padding: 14px 40px;
@@ -168,34 +197,57 @@
       cursor: pointer;
       text-transform: uppercase;
       transition: 0.3s;
+      margin-bottom: 0;
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
     }
-    .add-cart:hover { background: #cc0000; }
+    .add-cart:hover { background: #ed8439; }
+    .add-cart .material-icons {
+      font-size: 20px;
+      transform: translateY(2px);
+    }
 
-    .desc { margin-top: 35px; color: #bbb; line-height: 1.7; text-align: left; }
+    .desc {
+      margin-top: 35px;
+      color: #333;
+      line-height: 1.7;
+      text-align: left;
+    }
 
     /* SIMILAR PRODUCTS */
-    .similar { margin-top: 60px; }
-    .similar h3 { font-size: 22px; color: #ff0000; margin-bottom: 20px; }
+    .similar { margin-top: 60px; overflow: hidden; }
+    .similar h3 { font-size: 22px; color: #ed8439; margin-bottom: 20px; }
     .similar-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      display: flex;
       gap: 20px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      padding-bottom: 10px;
+      scrollbar-width: none; /* Firefox */
+    }
+    .similar-grid::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
     }
     .similar-item {
-      background: #161616;
-      border: 1px solid #2b2b2b;
+      flex: 0 0 160px;
+      background: #fff;
+      border: 1px solid #ededed;
       text-align: center;
       padding: 10px;
       cursor: pointer;
       transition: 0.3s;
       border-radius: 8px;
+      color: #111;
+      user-select: none;
     }
-    .similar-item:hover { transform: translateY(-5px); border-color: #ff0000; }
+    .similar-item:hover { transform: translateY(-5px); border-color: #ed8439; }
     .similar-item img { width: 100%; aspect-ratio: 1/1.2; object-fit: cover; border-radius: 6px; }
-    .similar-item h4 { font-size: 14px; margin-top: 8px; }
-    .similar-item p { color: #ff3333; font-weight: 700; margin: 4px 0; }
+    .similar-item h4 { font-size: 14px; margin-top: 8px; color: #111; }
+    .similar-item p { color: #ed8439; font-weight: 700; margin: 4px 0; }
 
-    /* MODERN TOASTS */
+    /* TOASTS */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -205,35 +257,35 @@
       gap: 12px;
       z-index: 3000;
     }
-
     .toast {
-      background: rgba(20, 20, 20, 0.95);
-      border: 1px solid #333;
-      color: #fff;
+      background: rgba(250, 240, 230, 0.98);
+      border: 1px solid #f6e5ca;
+      color: #111;
       padding: 12px 18px;
       border-radius: 10px;
       font-size: 14px;
       font-weight: 600;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.14);
       opacity: 0;
       transform: translateY(-10px);
       animation: slideIn 0.4s forwards;
     }
-
-    .toast.success { border-left: 5px solid #00ff7f; }
-    .toast.error { border-left: 5px solid #ff3333; }
-
+    .toast.success { border-left: 5px solid #00b894; }
+    .toast.error { border-left: 5px solid #ed8439; }
     @keyframes slideIn {
       to { opacity: 1; transform: translateY(0); }
     }
 
     @media (max-width: 768px) {
-      .logo { font-size: 18px; }
+      .logo { font-size: 20px; }
       #cartContainer .material-icons { font-size: 24px; }
-      .product-title { font-size: 20px; }
-      .price { font-size: 22px; }
+      .product-title { font-size: 17px; }
+      .price { font-size: 18px; }
+      .mrp { font-size: 14px; }
       .add-cart { width: 100%; font-size: 15px; }
       .desc { font-size: 14px; }
+      .container { padding: 10px; }
+      .similar-item { flex: 0 0 45vw; }
     }
   </style>
 </head>
@@ -256,18 +308,19 @@
 
     <div class="info">
       <h2 class="product-title" id="pname"></h2>
-      <div class="price" id="pprice"></div>
-
+      <div class="price-wrap">
+        <span class="mrp" id="pmrp"></span>
+        <span class="price" id="pprice"></span>
+      </div>
       <div class="sizes" id="psizes"></div>
-
       <div class="qty">
         <button onclick="changeQty(-1)">-</button>
         <input type="text" id="quantity" value="1" readonly />
         <button onclick="changeQty(1)">+</button>
       </div>
-
-      <button class="add-cart" onclick="addToCart()">Add to Cart</button>
-
+      <button class="add-cart" onclick="addToCart()">
+        <span class="material-icons">add_shopping_cart</span> Add to Cart
+      </button>
       <p class="desc" id="pdesc"></p>
     </div>
 
@@ -280,6 +333,13 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
+    // Cart count fix for header
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      document.getElementById("cartCount").innerText = cart.length > 0 ? cart.length : '';
+    }
+    updateCartCount();
+
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
     let product = null;
@@ -301,8 +361,10 @@
     async function loadProduct() {
       const res = await fetch(`https://reacher-backend-production.up.railway.app/api/products/${id}`);
       product = await res.json();
-
       document.getElementById("pname").textContent = product.name;
+
+      // Frontend strikethrough price hardcoded to 649 (can adjust)
+      document.getElementById("pmrp").textContent = "₹649";
       document.getElementById("pprice").textContent = "₹" + product.price;
       document.getElementById("pdesc").textContent = product.description;
 
@@ -315,20 +377,19 @@
       document.getElementById("psizes").innerHTML = sizeKeys
         .map(s => `<button onclick="selectSize(this)">${s}</button>`)
         .join("");
-
       loadSimilar();
     }
 
     function nextImage() {
       const allImages = product.images || [];
-      if (allImages.length === 0) return;
+      if (!allImages.length) return;
       currentImageIndex = (currentImageIndex + 1) % allImages.length;
       document.getElementById("mainImage").src = allImages[currentImageIndex];
     }
 
     function prevImage() {
       const allImages = product.images || [];
-      if (allImages.length === 0) return;
+      if (!allImages.length) return;
       currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
       document.getElementById("mainImage").src = allImages[currentImageIndex];
     }
@@ -356,13 +417,10 @@
         showToast("Please select a size!", "error");
         return;
       }
-
       const selectedSize = selected.textContent.trim();
       const quantity = parseInt(document.getElementById("quantity").value);
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
       const existingItem = cart.find(item => item._id === product._id && item.size === selectedSize);
-
       if (existingItem) {
         existingItem.quantity += quantity;
       } else {
@@ -375,8 +433,8 @@
           quantity,
         });
       }
-
       localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
       showToast("Added to cart!", "success");
       setTimeout(() => (location.href = "cart.html"), 1000);
     }
@@ -384,11 +442,14 @@
     async function loadSimilar() {
       const res = await fetch("https://reacher-backend-production.up.railway.app/api/products");
       const data = await res.json();
-      const similar = data.filter(p => p._id !== id && p.type !== "ad").slice(0, 4);
-      document.getElementById("similarGrid").innerHTML = similar
+      const similar = data.filter(p => p._id !== id && p.type !== "ad");
+      // Repeat the similar products array 5 times for smoother infinite feel
+      let repeated = [];
+      for(let i=0; i<5; i++) repeated = repeated.concat(similar);
+      document.getElementById("similarGrid").innerHTML = repeated
         .map(
           p => `
-          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'">
+          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'" tabindex="0">
             <img src="${p.images?.[0] || ''}" alt="${p.name}">
             <h4>${p.name}</h4>
             <p>₹${p.price}</p>
@@ -400,4 +461,4 @@
     loadProduct();
   </script>
 </body>
-</html> 
+</html>
