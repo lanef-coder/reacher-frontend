@@ -34,45 +34,40 @@
       text-align: center;
     }
     #cartContainer {
-  position: absolute;
-  right: 28px;
-  top: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: 0.3s;
-  background: transparent;
-  padding: 6px 10px;
-  min-width: 41px;
-  min-height: 41px;
-}
+      position: absolute;
+      right: 28px;
+      top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+      background: transparent;
+      padding: 6px 10px;
+      min-width: 41px;
+      min-height: 41px;
+    }
 
     #cartContainer .material-icons {
       font-size: 26px;
       color: #111;
     }
-  #cartCount {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background: #ed8439;
-  color: #fff;
-  border-radius: 50%;
-  padding: 3px 7px;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 14px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.15);
-}
-
-
-
-
-    #cartContainer:hover {
-      background: #f5ecd7;
+    #cartCount {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #ed8439;
+      color: #fff;
+      border-radius: 50%;
+      padding: 3px 7px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 14px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.15);
     }
+
+    #cartContainer:hover { background: #f5ecd7; }
 
     /* CONTAINER */
     .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
@@ -206,10 +201,7 @@
       gap: 8px;
     }
     .add-cart:hover { background: #ed8439; }
-    .add-cart .material-icons {
-      font-size: 20px;
-      transform: translateY(2px);
-    }
+    .add-cart .material-icons { font-size: 20px; transform: translateY(2px); }
 
     .desc {
       margin-top: 35px;
@@ -227,11 +219,9 @@
       overflow-x: auto;
       scroll-behavior: smooth;
       padding-bottom: 10px;
-      scrollbar-width: none; /* Firefox */
+      scrollbar-width: none;
     }
-    .similar-grid::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
-    }
+    .similar-grid::-webkit-scrollbar { display: none; }
     .similar-item {
       flex: 0 0 160px;
       background: #fff;
@@ -274,9 +264,7 @@
     }
     .toast.success { border-left: 5px solid #00b894; }
     .toast.error { border-left: 5px solid #ed8439; }
-    @keyframes slideIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
 
     @media (max-width: 768px) {
       .logo { font-size: 20px; }
@@ -335,7 +323,6 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
-    // Cart count fix for header
     function updateCartCount() {
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
       document.getElementById("cartCount").innerText = cart.length > 0 ? cart.length : '';
@@ -364,8 +351,6 @@
       const res = await fetch(`https://reacher-backend-production.up.railway.app/api/products/${id}`);
       product = await res.json();
       document.getElementById("pname").textContent = product.name;
-
-      // Frontend strikethrough price hardcoded to 649 (can adjust)
       document.getElementById("pmrp").textContent = "₹649";
       document.getElementById("pprice").textContent = "₹" + product.price;
       document.getElementById("pdesc").textContent = product.description;
@@ -412,6 +397,7 @@
       input.value = q;
     }
 
+    // ✅ Updated addToCart with availableSizes included
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
@@ -419,8 +405,14 @@
         showToast("Please select a size!", "error");
         return;
       }
+
       const selectedSize = selected.textContent.trim();
       const quantity = parseInt(document.getElementById("quantity").value);
+
+      // Get all available sizes for the product
+      const availableSizes = Array.from(document.querySelectorAll(".sizes button"))
+        .map(btn => btn.textContent.trim());
+
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const existingItem = cart.find(item => item._id === product._id && item.size === selectedSize);
       if (existingItem) {
@@ -433,8 +425,10 @@
           image: product.images?.[0] || "",
           size: selectedSize,
           quantity,
+          availableSizes // ✅ added property
         });
       }
+
       localStorage.setItem("cart", JSON.stringify(cart));
       updateCartCount();
       showToast("Added to cart!", "success");
@@ -445,9 +439,8 @@
       const res = await fetch("https://reacher-backend-production.up.railway.app/api/products");
       const data = await res.json();
       const similar = data.filter(p => p._id !== id && p.type !== "ad");
-      // Repeat the similar products array 5 times for smoother infinite feel
       let repeated = [];
-      for(let i=0; i<5; i++) repeated = repeated.concat(similar);
+      for (let i = 0; i < 5; i++) repeated = repeated.concat(similar);
       document.getElementById("similarGrid").innerHTML = repeated
         .map(
           p => `

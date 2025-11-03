@@ -7,13 +7,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
+  * {
+    margin:0; padding:0; box-sizing:border-box;
+  }
   body {
     background: #fff;
     color: #111;
     font-family: 'Poppins', sans-serif;
     min-height: 100vh;
   }
+
+  /* HEADER */
   header {
     background: #f5ecd7;
     color: #111;
@@ -27,6 +31,7 @@
     z-index: 1000;
     position: relative;
   }
+
   .header-btn {
     background: none;
     border: none;
@@ -40,8 +45,13 @@
     padding: 0 10px;
     transition: color 0.2s;
   }
-  .header-btn:hover { color: #ed8439; }
-  .header-btn .material-icons { font-size: 24px; }
+  .header-btn:hover {
+    color: #ed8439;
+  }
+  .header-btn .material-icons {
+    font-size: 24px;
+  }
+
   .logo {
     font-family: 'Playfair Display', serif;
     font-size: 28px;
@@ -55,6 +65,8 @@
     top: 50%;
     transform: translateX(-50%) translateY(-50%);
   }
+
+  /* Toast */
   .toast {
     position: fixed;
     top: 10px;
@@ -72,6 +84,8 @@
   .toast.success { background: #00b894; color: #fff; }
   .toast.error { background: #ed8439; color: #fff; }
   .toast.warning { background: #ffc107; color: #000; }
+
+  /* Layout */
   .container {
     max-width: 1200px;
     margin: 40px auto 0;
@@ -82,13 +96,18 @@
     justify-content: center;
     min-height: 55vh;
   }
-  .cart-section { flex: 2; min-width: 350px; }
+  .cart-section {
+    flex: 2;
+    min-width: 350px;
+  }
   h2 {
     font-family: 'Playfair Display', serif;
     font-size: 28px;
     color: #ed8439;
     margin-bottom: 20px;
   }
+
+  /* Cart Item Card */
   .cart-item {
     display: flex;
     align-items: center;
@@ -121,7 +140,10 @@
     border-color: #ed8439;
     transform: scale(1.05);
   }
-  .item-details { flex: 1; margin-left: 25px; }
+  .item-details {
+    flex: 1;
+    margin-left: 25px;
+  }
   .item-details h3 {
     font-family: 'Playfair Display', serif;
     font-size: 20px;
@@ -150,6 +172,8 @@
     font-weight: 700;
     font-size: 20px;
   }
+
+  /* Size selector and qty controls */
   select, .qty-controls button, .qty-controls span {
     font-size: 15px;
     border-radius: 6px;
@@ -190,6 +214,7 @@
     background: #fff;
     color: #111;
   }
+
   .remove-btn {
     background: linear-gradient(135deg, #ed8439, #c79151);
     color: white;
@@ -208,6 +233,8 @@
     background: linear-gradient(135deg, #c79151, #ed8439);
     transform: scale(1.05);
   }
+
+  /* Summary */
   .summary {
     flex: 1;
     background: #f8f6ee;
@@ -276,6 +303,8 @@
     text-decoration: none;
     font-weight: 700;
   }
+
+  /* Responsive */
   @media (max-width: 850px) {
     .container {
       flex-direction: column;
@@ -288,14 +317,34 @@
       width: 100%;
       min-width: unset;
     }
-    .cart-item { flex-direction: row; }
-    .item-details { margin-left: 20px; }
-    .remove-btn { margin-left: 20px; margin-top: 0; }
+    .cart-item {
+      flex-direction: row;
+    }
+    .item-details {
+      margin-left: 20px;
+    }
+    .remove-btn {
+      margin-left: 20px;
+      margin-top: 0;
+    }
   }
+
   @media (max-width: 480px) {
-    .cart-item { flex-direction: column; align-items: flex-start; }
-    .item-details { margin-left: 0; margin-top: 10px; width: 100%; }
-    .remove-btn { margin: 12px 0 0 0; align-self: flex-start; width: 100%; text-align: center; }
+    .cart-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .item-details {
+      margin-left: 0;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .remove-btn {
+      margin: 12px 0 0 0;
+      align-self: flex-start;
+      width: 100%;
+      text-align: center;
+    }
     .header-btn.left, .header-btn.right {
       font-size: 16px;
       padding: 6px 8px;
@@ -304,7 +353,9 @@
 </style>
 </head>
 <body>
+<!-- Toast notification -->
 <div id="toast" class="toast"></div>
+
 <header>
   <button class="header-btn left" onclick="window.history.back()">
     <span class="material-icons">arrow_back</span> Back
@@ -314,6 +365,7 @@
     Home <span class="material-icons">home</span>
   </button>
 </header>
+
 <div class="container">
   <section class="cart-section" aria-label="Your Shopping Bag Items">
     <h2>Your Shopping Bag</h2>
@@ -323,6 +375,7 @@
       <a href="index.html">Continue Shopping →</a>
     </div>
   </section>
+
   <aside id="summary" class="summary" aria-label="Order Summary" style="display:none;">
     <h3>Order Summary</h3>
     <p><span>Total Items</span><span id="totalItems"></span></p>
@@ -332,6 +385,7 @@
     <button class="checkout-btn" onclick="goToCheckout()">Checkout</button>
   </aside>
 </div>
+
 <script>
   function showToast(message, type = "success") {
     const toast = document.getElementById("toast");
@@ -340,33 +394,40 @@
     toast.style.display = "block";
     setTimeout(() => toast.style.display = "none", 2700);
   }
+
   function loadCart() {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const container = document.getElementById("cartItems");
     const summary = document.getElementById("summary");
     const empty = document.getElementById("emptyCart");
+
     if (!cart.length) {
       container.innerHTML = "";
       summary.style.display = "none";
       empty.style.display = "block";
       return;
     }
+
     empty.style.display = "none";
     summary.style.display = "block";
+
     let totalItems = 0, totalValue = 0;
+
     container.innerHTML = cart.map((item, index) => {
       const price = parseFloat(item.price?.toString().replace(/[^\d.]/g, "")) || 0;
       const qty = Number(item.qty || 1);
       totalItems += qty;
       totalValue += price * qty;
-      // Show only valid available sizes for this item:
-      const availableSizes = (item.availableSizes && item.availableSizes.length > 0) ? item.availableSizes : [item.size];
+
+      // Use availableSizes from cart item if present, else fallback to just the size selected
+      const availableSizes = item.availableSizes && item.availableSizes.length > 0 ? item.availableSizes : [item.size];
       const sizeSection = item.size ? `
         <p>Size:
           <select onchange="updateSize(${index}, this.value)">
             ${availableSizes.map(s => `<option value="${s}"${s === item.size ? " selected" : ""}>${s}</option>`).join("")}
           </select>
         </p>` : '';
+
       return `
         <div class="cart-item" role="listitem">
           <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')" />
@@ -386,17 +447,23 @@
             </div>
           </div>
           <button class="remove-btn" onclick="removeItem(${index})" aria-label="Remove ${item.name}">Remove</button>
-        </div>`;
+        </div>
+      `;
     }).join('');
-    // Delivery
+
+    // Delivery Charges logic
     let delivery = 0;
-    if (totalValue <= 1000) delivery = 100;
+    if (totalValue <= 1000) {
+      delivery = 100;
+    }
     let deliveryText = delivery > 0 ? `<span class="charges-paid">₹${delivery}</span>` : `<span class="charges-free">Free</span>`;
+
     document.getElementById("totalItems").textContent = totalItems;
     document.getElementById("cartValue").textContent = `₹${totalValue.toFixed(2)}`;
     document.getElementById("deliveryCharges").innerHTML = deliveryText;
     document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery).toFixed(2)}`;
   }
+
   function changeQty(i, c) {
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     if (!cart[i]) return;
@@ -405,6 +472,7 @@
     loadCart();
     showToast("Quantity updated");
   }
+
   function updateSize(i, s) {
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     if (!cart[i]) return;
@@ -420,6 +488,7 @@
     loadCart();
     showToast("Size updated");
   }
+
   function removeItem(i) {
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     cart.splice(i, 1);
@@ -427,6 +496,7 @@
     loadCart();
     showToast("Item removed", "warning");
   }
+
   function goToCheckout() {
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     if (!cart.length) {
@@ -435,9 +505,11 @@
     }
     location.href = "address.html";
   }
+
   function goToProduct(id) {
     location.href = `productdetail.html?id=${id}`;
   }
+
   loadCart();
 </script>
 </body>
