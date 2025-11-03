@@ -6,9 +6,12 @@
   <title>Delivery Address | ZKRAZE</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #fff; color: #111; font-family: "Poppins", sans-serif; }
+
     /* Header */
     header {
       background: #f5ecd7;
@@ -35,7 +38,6 @@
       left: 50%;
       top: 50%;
       transform: translateX(-50%) translateY(-50%);
-      margin: 0;
     }
     .header-btn {
       position: absolute;
@@ -48,7 +50,6 @@
       border-radius: 8px;
       padding: 11px 20px;
       font-size: 16px;
-      font-family: 'Poppins', sans-serif;
       font-weight: 600;
       display: flex;
       align-items: center;
@@ -58,13 +59,13 @@
       box-shadow: 0 2px 8px rgba(237, 132, 57, 0.08);
     }
     .header-btn:hover { background: #c79151; }
-    .header-btn .material-icons { font-size: 21px; margin-right: 2px; }
+
     /* Container */
     .container {
       max-width: 600px;
       background: #f9f6ef;
       margin: 40px auto;
-      padding: 36px 30px 30px 30px;
+      padding: 36px 30px;
       border-radius: 14px;
       box-shadow: 0 0 10px rgba(237, 132, 57, 0.11);
     }
@@ -75,13 +76,7 @@
       margin-bottom: 25px;
       font-size: 23px;
     }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600;
-      color: #6d665e;
-      font-size: 16px;
-    }
+    label { display: block; margin-bottom: 6px; font-weight: 600; color: #6d665e; font-size: 16px; }
     input, textarea {
       width: 100%;
       padding: 10px 12px;
@@ -89,70 +84,65 @@
       border: 1px solid #eedbbf;
       border-radius: 7px;
       background: #fff;
-      color: #111;
       font-size: 15px;
       transition: border 0.3s;
     }
     input:focus, textarea:focus { border-color: #ed8439; }
     textarea { resize: none; height: 70px; }
-    .btn {
+    .btn, .location-btn {
       display: block;
       width: 100%;
       padding: 13px;
       font-weight: 700;
-      background: #ed8439;
       border: none;
       border-radius: 7px;
-      font-size: 17px;
+      font-size: 15px;
       cursor: pointer;
-      color: white;
       transition: 0.3s;
-      text-transform: uppercase;
-      margin-top: 9px;
       box-shadow: 0 2px 8px rgba(237,132,57,0.08);
-    }
-    .btn:hover { background: #c79151; }
-    .location-btn {
-      background: #eedbbf;
-      color: #111;
-      border: none;
-      padding: 10px 16px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 6px;
-      display: block;
-      margin: 0 auto 8px;
-      transition: 0.2s;
-      font-weight: 600;
-    }
-    .location-btn:hover { background: #ed8439; color: #fff; }
-    .location-status {
-      text-align: center;
-      font-size: 14px;
-      color: #999;
-      min-height: 21px;
       margin-bottom: 10px;
     }
-    .note {
-      text-align: center;
-      color: #888;
-      font-size: 14px;
-      margin-top: 13px;
+    .btn { background: #ed8439; color: white; text-transform: uppercase; }
+    .btn:hover { background: #c79151; }
+    .location-btn { background: #eedbbf; color: #111; font-weight: 600; }
+    .location-btn:hover { background: #ed8439; color: #fff; }
+    .location-status { text-align: center; font-size: 14px; color: #999; min-height: 21px; margin-bottom: 10px; }
+
+    /* Map Modal */
+    #mapModal {
+      display: none;
+      position: fixed;
+      z-index: 3000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
     }
-    .back-btn {
-      background: #eedbbf;
-      color: #111;
-      text-align: center;
-      display: block;
-      padding: 12px;
-      border-radius: 7px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: 0.3s;
-      margin-top: 19px;
-      margin-bottom: 0;
+    #mapContainer {
+      width: 90%;
+      max-width: 600px;
+      height: 400px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
     }
-    .back-btn:hover { background: #ed8439; color: #fff; }
+    #map { width: 100%; height: 100%; }
+    #closeMap {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #ed8439;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
     .toast {
       visibility: hidden;
       min-width: 260px;
@@ -162,7 +152,7 @@
       border-radius: 6px;
       padding: 14px;
       position: fixed;
-      z-index: 2000;
+      z-index: 4000;
       left: 50%;
       bottom: 30px;
       transform: translateX(-50%);
@@ -173,18 +163,11 @@
     }
     .toast.show { visibility: visible; opacity: 1; bottom: 57px; }
     .field-error { border-color: #ee3636 !important; }
-    .hint {
-      color: #997;
-      font-size: 13px;
-      margin-top: -10px;
-      margin-bottom: 11px;
-      font-weight: 500;
-    }
+
     @media (max-width: 600px) {
       .logo { font-size: 20px; }
-      .header-btn { font-size: 14px; padding: 9px 13px; }
       .container { margin: 20px; padding: 17px; }
-      h2 { font-size: 17px; }
+      h2 { font-size: 18px; }
     }
   </style>
 </head>
@@ -205,10 +188,9 @@
       <input type="tel" id="phone" required placeholder="10-digit number, e.g. 9876543210" />
       <label for="email">Email *</label>
       <input type="email" id="email" required placeholder="name@example.com" />
-      <div id="emailHint" class="hint">We will validate email and block disposable domains.</div>
-      <label for="address1">Address Line 1 — Flat / Building / Apartment *</label>
+      <label for="address1">Address Line 1 *</label>
       <textarea id="address1" required placeholder="Flat 12B, Building Rosewood"></textarea>
-      <label for="address2">Address Line 2 — Landmark / Nearby Location *</label>
+      <label for="address2">Landmark / Nearby *</label>
       <textarea id="address2" required placeholder="Near Apollo Hospital or any landmark"></textarea>
       <label for="city">City *</label>
       <input type="text" id="city" required />
@@ -216,142 +198,114 @@
       <input type="text" id="state" required />
       <label for="pincode">Pincode *</label>
       <input type="text" id="pincode" pattern="[0-9]{6}" required placeholder="6-digit pincode" />
+
       <button type="button" class="location-btn" onclick="detectLocation()">Use Current Location</button>
+      <button type="button" class="location-btn" onclick="openMap()">📍 Select on Map</button>
+
       <div id="locationStatus" class="location-status"></div>
       <button type="submit" class="btn">Proceed to Payment</button>
     </form>
-    <p class="note">All fields marked * are mandatory. Prepaid orders only.</p>
   </div>
+
+  <div id="mapModal">
+    <div id="mapContainer">
+      <button id="closeMap">&times;</button>
+      <div id="map"></div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
+
   <script>
     const toast = document.getElementById("toast");
     const statusEl = document.getElementById("locationStatus");
-    const addressForm = document.getElementById("addressForm");
 
     function showToast(message, color = "#ed8439") {
       toast.textContent = message;
       toast.style.backgroundColor = color;
-      toast.style.borderColor = "#c79151";
       toast.classList.add("show");
       setTimeout(() => toast.classList.remove("show"), 3500);
     }
 
-    function normalizePhone(phone) { return (phone || "").replace(/\D/g, ""); }
-    function isValidIndianPhone(phone) { return /^[6-9]\d{9}$/.test(normalizePhone(phone)); }
-    function isSuspiciousPhone(phone) {
-      const p = normalizePhone(phone);
-      if (p.length !== 10) return true;
-      if (/^(\d)\1+$/.test(p)) return true;
-      if ("0123456789012345".includes(p) || "5432109876543210".includes(p)) return true;
-      return false;
-    }
-    function isValidEmailFormat(email) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-      return re.test(email);
-    }
-    function isDisposableEmail(email) {
-      const domain = email.split("@")[1]?.toLowerCase() || "";
-      const disposableDomains = [
-        "mailinator.com","tempmail.com","10minutemail.com","yopmail.com","guerrillamail.com",
-        "dispostable.com","trashmail.com","fakeinbox.com","maildrop.cc"
-      ];
-      return disposableDomains.some(d => domain === d || domain.endsWith("." + d));
-    }
-    async function detectLocation() {
-      if (!navigator.geolocation) {
-        showToast("Geolocation not supported.", "#ee3636");
-        return;
+    // --- Location autofill ---
+    async function fillAddress(lat, lon) {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`);
+        const data = await res.json();
+        const addr = data.address || {};
+        const clean = str => str ? str.replace(/\s*\b(Taluk|Urban|India)\b\s*/gi, '').trim() : '';
+        const area = clean(addr.suburb || addr.village || addr.neighbourhood || '');
+        const road = clean(addr.road || '');
+        document.getElementById("address1").value = [road, area].filter(Boolean).join(", ");
+        document.getElementById("address2").value = clean(addr.landmark || addr.attraction || addr.locality || area);
+        document.getElementById("city").value = clean(addr.city || addr.town || addr.village || "");
+        document.getElementById("state").value = addr.state || "";
+        document.getElementById("pincode").value = addr.postcode || "";
+        showToast("Location detected successfully!", "#00bd85");
+        statusEl.textContent = "Location detected ✔";
+        statusEl.style.color = "#00bd85";
+      } catch {
+        showToast("Unable to fetch address details.", "#ee3636");
       }
+    }
+
+    function detectLocation() {
+      if (!navigator.geolocation) return showToast("Geolocation not supported.", "#ee3636");
       statusEl.textContent = "Detecting location...";
       statusEl.style.color = "#999";
-      navigator.geolocation.getCurrentPosition(async (pos) => {
-        const { latitude, longitude } = pos.coords;
-        try {
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`
-          );
-          const data = await res.json();
-          const addr = data.address || {};
-          let parts = [];
-          if (addr.house_number) parts.push(addr.house_number);
-          if (addr.building) parts.push(addr.building);
-          if (addr.road) parts.push(addr.road);
-          document.getElementById("address1").value = parts.join(", ") || data.display_name || "";
-          const landmark = addr.attraction || addr.landmark || addr.neighbourhood || addr.suburb || addr.village || "";
-          document.getElementById("address2").value = landmark || "";
-          document.getElementById("city").value = addr.city || addr.town || addr.village || "";
-          document.getElementById("state").value = addr.state || "";
-          document.getElementById("pincode").value = addr.postcode || "";
-          showToast("Location detected successfully!", "#00bd85");
-          statusEl.textContent = "Location detected ✔";
-          statusEl.style.color = "#00bd85";
-        } catch {
-          showToast("Unable to fetch address details.", "#ee3636");
+      navigator.geolocation.getCurrentPosition(
+        pos => fillAddress(pos.coords.latitude, pos.coords.longitude),
+        () => showToast("Permission denied or unavailable.", "#ee3636")
+      );
+    }
+
+    // --- Map Modal ---
+    let map;
+    function openMap() {
+      const modal = document.getElementById("mapModal");
+      modal.style.display = "flex";
+      setTimeout(() => {
+        if (!map) {
+          map = L.map("map").setView([12.9716, 77.5946], 13);
+          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
+          let marker;
+          map.on("click", e => {
+            if (marker) map.removeLayer(marker);
+            marker = L.marker(e.latlng).addTo(map);
+            fillAddress(e.latlng.lat, e.latlng.lng);
+            showToast("Location selected from map!", "#00bd85");
+            modal.style.display = "none";
+          });
         }
-      }, () => showToast("Permission denied or unavailable.", "#ee3636"));
+      }, 200);
     }
+    document.getElementById("closeMap").onclick = () => (document.getElementById("mapModal").style.display = "none");
 
-    function setFieldError(el, on = true) {
-      if (on) el.classList.add("field-error");
-      else el.classList.remove("field-error");
-    }
-
-    addressForm.addEventListener("submit", (e) => {
+    // --- Validation & Save ---
+    document.getElementById("addressForm").addEventListener("submit", e => {
       e.preventDefault();
-      const name = document.getElementById("name");
-      const phone = document.getElementById("phone");
-      const email = document.getElementById("email");
-      const address1 = document.getElementById("address1");
-      const address2 = document.getElementById("address2");
-      const city = document.getElementById("city");
-      const state = document.getElementById("state");
-      const pincode = document.getElementById("pincode");
-      [name, phone, email, address1, address2, city, state, pincode].forEach(el => setFieldError(el, false));
-      const required = [name, phone, email, address1, address2, city, state, pincode];
-      for (const el of required) {
-        if (!el.value.trim()) {
-          setFieldError(el, true);
-          showToast("Please fill all required fields!", "#ee3636");
-          el.focus();
-          return;
-        }
-      }
-      const emailVal = email.value.trim();
-      if (!isValidEmailFormat(emailVal)) {
-        setFieldError(email, true);
-        showToast("Invalid email format.", "#ee3636");
-        return;
-      }
-      if (isDisposableEmail(emailVal)) {
-        setFieldError(email, true);
-        showToast("Disposable email not allowed.", "#ee3636");
-        return;
-      }
-      const phoneVal = phone.value.trim();
-      if (!isValidIndianPhone(phoneVal) || isSuspiciousPhone(phoneVal)) {
-        setFieldError(phone, true);
-        showToast("Enter a valid 10-digit Indian number.", "#ee3636");
-        return;
-      }
-      if (!/^\d{6}$/.test(pincode.value.trim())) {
-        setFieldError(pincode, true);
-        showToast("Invalid 6-digit pincode.", "#ee3636");
-        return;
-      }
-      const addressObj = {
-        name: name.value.trim(),
-        phone: normalizePhone(phoneVal),
-        email: emailVal,
-        address1: address1.value.trim(),
-        address2: address2.value.trim(),
-        city: city.value.trim(),
-        state: state.value.trim(),
-        pincode: pincode.value.trim(),
-        savedAt: new Date().toISOString()
-      };
+      const name = document.getElementById("name").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const address1 = document.getElementById("address1").value.trim();
+      const address2 = document.getElementById("address2").value.trim();
+      const city = document.getElementById("city").value.trim();
+      const state = document.getElementById("state").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+
+      if (!name || !phone || !email || !address1 || !address2 || !city || !state || !pincode)
+        return showToast("Please fill all required fields!", "#ee3636");
+      if (!/^[6-9]\d{9}$/.test(phone))
+        return showToast("Invalid phone number!", "#ee3636");
+      if (!/^\d{6}$/.test(pincode))
+        return showToast("Invalid pincode!", "#ee3636");
+
+      const addressObj = { name, phone, email, address1, address2, city, state, pincode, savedAt: new Date().toISOString() };
       localStorage.setItem("userAddress", JSON.stringify(addressObj));
       showToast("Address saved! Redirecting...", "#00bd85");
-      setTimeout(() => { window.location.href = "payment.html"; }, 1200);
+      setTimeout(() => (window.location.href = "payment.html"), 1200);
     });
   </script>
 </body>
