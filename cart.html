@@ -4,53 +4,59 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Your Cart | ZKRAZE</title>
-
-<!-- Font: Poppins + Playfair Display (Italian-Roman style) -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
-
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 <style>
-  * {
-    margin: 0; padding: 0; box-sizing: border-box;
-  }
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    background: #0a0a0a;
-    color: #fff;
+    background: #fff;
+    color: #111;
     font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
   }
 
-  /* Header */
+  /* HEADER */
   header {
-    background: #111;
-    color: white;
+    background: #f5ecd7;
+    color: #111;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding: 15px 25px;
-    border-bottom: 2px solid #c91b1b;
+    justify-content: space-between;
+    padding: 15px 20px;
+    border-bottom: 2px solid #ed8439;
     position: sticky;
     top: 0;
     z-index: 1000;
   }
+
+  .header-btn {
+    background: none;
+    border: none;
+    color: #111;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 10px;
+    transition: color 0.2s;
+  }
+  .header-btn:hover { color: #ed8439; }
+  .header-btn .material-icons { font-size: 24px; }
+
   .logo {
     font-family: 'Playfair Display', serif;
-    font-size: 26px;
+    font-size: 28px;
     font-weight: 700;
-    color: #ff2e2e;
+    color: #111;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .home-btn {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 16px;
-    transition: 0.3s;
-  }
-  .home-btn:hover {
-    color: #ff2e2e;
+    text-align: center;
+    flex: 1;
   }
 
-  /* Toast Notifications */
+  /* Toast */
   .toast {
     position: fixed;
     top: 10px;
@@ -63,32 +69,28 @@
     z-index: 2000;
     min-width: 250px;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.26);
   }
-  .toast.success { background: #28a745; color: #fff; }
-  .toast.error { background: #dc3545; color: #fff; }
+  .toast.success { background: #00b894; color: #fff; }
+  .toast.error { background: #ed8439; color: #fff; }
   .toast.warning { background: #ffc107; color: #000; }
 
   /* Layout */
   .container {
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 40px auto 0;
     padding: 20px;
     display: flex;
     gap: 30px;
     flex-wrap: wrap;
     justify-content: center;
+    min-height: 55vh;
   }
-
-  /* Cart Section */
-  .cart-section {
-    flex: 2;
-    min-width: 350px;
-  }
+  .cart-section { flex: 2; min-width: 350px; }
   h2 {
     font-family: 'Playfair Display', serif;
     font-size: 28px;
-    color: #ff2e2e;
+    color: #ed8439;
     margin-bottom: 20px;
   }
 
@@ -96,149 +98,163 @@
   .cart-item {
     display: flex;
     align-items: center;
-    background: linear-gradient(145deg, #141414, #1e1e1e);
-    border: 1px solid #2b2b2b;
-    padding: 18px;
+    background: linear-gradient(145deg, #faf9f7, #f6eee4 78%);
+    border: 1px solid #eedbbf;
+    padding: 16px 20px;
     border-radius: 14px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+    margin-bottom: 22px;
+    box-shadow: 0 2px 8px rgba(237,132,57,0.12);
     transition: 0.3s ease;
   }
   .cart-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 5px 18px rgba(255, 46, 46, 0.15);
+    box-shadow: 0 5px 18px rgba(237,132,57,0.14);
   }
-
-  /* Bag Style Image */
   .cart-item img {
-    width: 110px;
-    height: 110px;
+    width: 130px;
+    height: 130px;
     object-fit: contain;
     border-radius: 10px;
-    background: #0e0e0e;
-    border: 2px solid #222;
+    background: #fff;
+    border: 2px solid #f1e6c8;
     padding: 5px;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: 0.3s;
+    box-shadow: 0 2px 8px rgba(237,132,57,0.15);
+    flex-shrink: 0;
   }
-  .cart-item img:hover {
-    border-color: #ff2e2e;
-    transform: scale(1.05);
-  }
-
-  /* Details */
-  .item-details {
-    flex: 1;
-    margin-left: 20px;
-  }
+  .cart-item img:hover { border-color: #ed8439; transform: scale(1.05); }
+  .item-details { flex: 1; margin-left: 25px; }
   .item-details h3 {
     font-family: 'Playfair Display', serif;
-    font-size: 18px;
+    font-size: 20px;
+    color: #111;
     margin-bottom: 6px;
-    color: #fff;
   }
   .item-details p {
-    color: #bbb;
+    color: #6d665e;
     margin-bottom: 6px;
-    font-size: 14px;
+    font-size: 15px;
   }
-  .item-details .price {
-    color: #ff3b3b;
+  .price-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+  }
+  .mrp {
+    color: #b5ad98;
+    font-size: 18px;
+    text-decoration: line-through;
+    font-weight: 400;
+  }
+  .price {
+    color: #ed8439;
     font-weight: 700;
-    font-size: 17px;
+    font-size: 20px;
   }
 
-  /* Dropdown + Quantity */
+  select, .qty-controls button, .qty-controls span {
+    font-size: 15px;
+    border-radius: 6px;
+  }
   select {
-    background: #111;
-    color: #fff;
-    border: 1px solid #444;
+    background: #fff;
+    color: #111;
+    border: 1px solid #eedbbf;
     padding: 6px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    outline: none;
+    font-family: 'Poppins', sans-serif;
+    margin-left: 5px;
   }
   .qty-controls {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+    margin-left: 5px;
   }
   .qty-controls button {
-    background: #333;
-    color: white;
+    background: #eedbbf;
+    color: #111;
     width: 28px;
     height: 28px;
     border: none;
-    font-size: 18px;
-    cursor: pointer;
     font-weight: 700;
     border-radius: 6px;
+    cursor: pointer;
     transition: 0.3s;
   }
   .qty-controls button:hover {
-    background: #555;
+    background: #ed8439;
+    color: #fff;
   }
   .qty-controls span {
     min-width: 25px;
     text-align: center;
     font-weight: 600;
+    background: #fff;
+    color: #111;
   }
 
-  /* Remove Button (Bag Style Tag) */
   .remove-btn {
-    background: linear-gradient(135deg, #ff2e2e, #b30000);
+    background: linear-gradient(135deg, #ed8439, #c79151);
     color: white;
     border: none;
-    padding: 10px 18px;
+    padding: 10px 20px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
     transition: 0.3s;
-    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+    font-size: 15px;
+    box-shadow: 0 2px 8px rgba(237,132,57,0.1);
+    margin-left: 30px;
+    flex-shrink: 0;
   }
   .remove-btn:hover {
-    background: linear-gradient(135deg, #b30000, #ff2e2e);
+    background: linear-gradient(135deg, #c79151, #ed8439);
     transform: scale(1.05);
   }
 
   /* Summary */
   .summary {
     flex: 1;
-    background: #111;
-    border: 1px solid #222;
-    border-radius: 14px;
-    padding: 25px;
+    background: #f8f6ee;
+    border: 1px solid #eedbbf;
+    border-radius: 12px;
+    padding: 30px 25px;
     height: fit-content;
     position: sticky;
     top: 100px;
-    min-width: 280px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    min-width: 310px;
+    box-shadow: 0 2px 7px rgba(237,132,57,0.1);
   }
   .summary h3 {
     font-family: 'Playfair Display', serif;
     font-size: 22px;
-    color: #ff2e2e;
+    color: #ed8439;
     margin-bottom: 20px;
-    border-bottom: 1px solid #222;
+    border-bottom: 1px solid #eedbbf;
     padding-bottom: 10px;
+    text-align: left;
   }
   .summary p {
     font-size: 15px;
     margin: 10px 0;
     display: flex;
     justify-content: space-between;
+    color: #61452e;
   }
   .summary .highlight {
     font-weight: 700;
-    color: #ff2e2e;
+    color: #ed8439;
     font-size: 17px;
-    border-top: 1px solid #333;
-    margin-top: 15px;
+    border-top: 1px solid #dabd8f;
+    margin-top: 14px;
     padding-top: 10px;
   }
-
+  .charges-free { color: #00bd85; font-weight:600;}
+  .charges-paid { color: #ed8439; font-weight:600;}
   .checkout-btn {
-    background: linear-gradient(135deg, #ff2e2e, #b30000);
+    background: linear-gradient(135deg, #ed8439, #c79151);
     color: white;
     border: none;
     padding: 14px;
@@ -250,35 +266,38 @@
     margin-top: 15px;
     transition: 0.3s;
     text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+    box-shadow: 0 2px 8px rgba(237,132,57,0.12);
   }
   .checkout-btn:hover {
-    background: linear-gradient(135deg, #b30000, #ff2e2e);
+    background: linear-gradient(135deg, #c79151, #ed8439);
     transform: scale(1.03);
   }
-
   .empty-cart {
     text-align: center;
     color: #aaa;
     margin-top: 60px;
     font-size: 16px;
   }
-
-  @media (max-width: 992px) {
-    .cart-item img { width: 90px; height: 90px; }
-    .item-details h3 { font-size: 16px; }
+  .empty-cart a {
+    color: #ed8439;
+    text-decoration: none;
+    font-weight: 700;
   }
 
-  @media (max-width: 768px) {
+  /* Responsive */
+  @media (max-width: 850px) {
     .container { flex-direction: column; align-items: center; }
     .summary { position: relative; top: 0; margin-top: 20px; width: 100%; }
-    .cart-item { flex-direction: column; text-align: center; }
-    .item-details { margin-left: 0; margin-top: 10px; }
+    .cart-item { flex-direction: row; }
+    .item-details { margin-left: 20px; }
+    .remove-btn { margin-left: 20px; margin-top: 0; }
   }
 
   @media (max-width: 480px) {
-    header { flex-direction: column; gap: 10px; }
-    .logo { font-size: 20px; }
+    .cart-item { flex-direction: column; align-items: flex-start; }
+    .item-details { margin-left: 0; margin-top: 10px; width: 100%; }
+    .remove-btn { margin: 12px 0 0 0; align-self: flex-start; width: 100%; text-align: center; }
+    .header-btn.left, .header-btn.right { font-size: 16px; padding: 6px 8px; }
   }
 </style>
 </head>
@@ -288,147 +307,148 @@
 <div id="toast" class="toast"></div>
 
 <header>
+  <button class="header-btn left" onclick="window.history.back()">
+    <span class="material-icons">arrow_back</span> Back
+  </button>
   <div class="logo">ZKRAZE</div>
-  <a href="index.html" class="home-btn">Home</a>
+  <button class="header-btn right" onclick="window.location.href='index.html'">
+    Home <span class="material-icons">home</span>
+  </button>
 </header>
 
 <div class="container">
-  <div class="cart-section">
+  <section class="cart-section">
     <h2>Your Shopping Bag</h2>
     <div id="cartItems"></div>
-    <div id="emptyCart" class="empty-cart" style="display: none;">
+    <div id="emptyCart" class="empty-cart" style="display:none;">
       Your bag is empty.<br><br>
-      <a href="index.html" style="color:#ff2e2e; text-decoration:none; font-weight:600;">Continue Shopping →</a>
+      <a href="index.html">Continue Shopping →</a>
     </div>
-  </div>
+  </section>
 
-  <div id="summary" class="summary" style="display: none;">
+  <aside id="summary" class="summary" style="display:none;">
     <h3>Order Summary</h3>
     <p><span>Total Items</span><span id="totalItems"></span></p>
     <p><span>Cart Value</span><span id="cartValue"></span></p>
-    <p><span>Delivery Charges</span><span style="color:#00ff7f;">Free</span></p>
+    <p><span>Delivery Charges</span><span id="deliveryCharges"></span></p>
     <p class="highlight"><span>Total Amount</span><span id="totalAmount"></span></p>
     <button class="checkout-btn" onclick="goToCheckout()">Checkout</button>
-  </div>
+  </aside>
 </div>
 
 <script>
-function showToast(message, type="success") {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.className = `toast ${type}`;
-  toast.style.display = "block";
-  setTimeout(()=>{ toast.style.display = "none"; }, 3000);
-}
-
-function loadCart() {
-  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  const cartContainer = document.getElementById("cartItems");
-  const summary = document.getElementById("summary");
-  const empty = document.getElementById("emptyCart");
-
-  if (!cart.length) {
-    cartContainer.innerHTML = "";
-    summary.style.display = "none";
-    empty.style.display = "block";
-    return;
+  function showToast(msg, type="success") {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.className = `toast ${type}`;
+    t.style.display = "block";
+    setTimeout(() => t.style.display = "none", 2700);
   }
 
-  empty.style.display = "none";
-  summary.style.display = "block";
+  function loadCart() {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const container = document.getElementById("cartItems");
+    const summary = document.getElementById("summary");
+    const empty = document.getElementById("emptyCart");
 
-  let totalItems = 0;
-  let totalValue = 0;
+    if (!cart.length) {
+      container.innerHTML = "";
+      summary.style.display = "none";
+      empty.style.display = "block";
+      return;
+    }
 
-  cartContainer.innerHTML = cart.map((item, index) => {
-    const price = parseFloat(item.price?.toString().replace(/[^\d.]/g, "")) || 0;
-    const qty = Number(item.qty || item.quantity || 1);
-    totalItems += qty;
-    totalValue += price * qty;
+    empty.style.display = "none";
+    summary.style.display = "block";
 
-    const sizeOptions = ["S","M","L","XL","XXL"]
-      .map(s => `<option value="${s}" ${s === item.size ? "selected" : ""}>${s}</option>`)
-      .join("");
+    let totalItems = 0, totalValue = 0;
 
-    return `
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')">
-        <div class="item-details">
-          <h3>${item.name}</h3>
-          <p>Size:
-            <select onchange="updateSize(${index}, this.value)">
-              ${sizeOptions}
-            </select>
-          </p>
-          <p>
-            Quantity:
-            <span class="qty-controls">
-              <button onclick="changeQty(${index}, -1)">-</button>
-              <span>${qty}</span>
-              <button onclick="changeQty(${index}, 1)">+</button>
-            </span>
-          </p>
-          <p class="price">₹${price}</p>
-        </div>
-        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-      </div>
-    `;
-  }).join("");
+    container.innerHTML = cart.map((item, index) => {
+      const price = parseFloat(item.price?.toString().replace(/[^\d.]/g, "")) || 0;
+      const qty = Number(item.qty || 1);
+      totalItems += qty;
+      totalValue += price * qty;
 
-  document.getElementById("totalItems").textContent = totalItems;
-  document.getElementById("cartValue").textContent = "₹" + totalValue.toFixed(2);
-  document.getElementById("totalAmount").textContent = "₹" + totalValue.toFixed(2);
-}
+      const availableSizes = item.availableSizes || ["S","M","L","XL","XXL"];
+      const sizeSection = item.size ? `
+        <p>Size:
+          <select onchange="updateSize(${index}, this.value)">
+            ${availableSizes.map(s => `<option value="${s}"${s===item.size?" selected":""}>${s}</option>`).join("")}
+          </select>
+        </p>` : '';
 
-function changeQty(index, change) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if (!cart[index]) return;
-  const current = Number(cart[index].qty || cart[index].quantity || 1);
-  cart[index].qty = Math.max(1, current + change);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  loadCart();
-  showToast("Quantity updated", "success");
-}
+      return `
+        <div class="cart-item">
+          <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')"/>
+          <div class="item-details">
+            <h3>${item.name || "Product"}</h3>
+            ${sizeSection}
+            <p>Quantity:
+              <span class="qty-controls">
+                <button onclick="changeQty(${index}, -1)">-</button>
+                <span>${qty}</span>
+                <button onclick="changeQty(${index}, 1)">+</button>
+              </span>
+            </p>
+            <div class="price-row">
+              <span class="mrp">₹649</span>
+              <span class="price">₹${price}</span>
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        </div>`;
+    }).join('');
 
-function updateSize(index, newSize) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if (!cart[index]) return;
-  const item = cart[index];
-
-  const existingIndex = cart.findIndex((p, i) => i !== index && p._id === item._id && p.size === newSize);
-  if (existingIndex !== -1) {
-    cart[existingIndex].qty = (cart[existingIndex].qty || 1) + (item.qty || 1);
-    cart.splice(index, 1);
-  } else {
-    cart[index].size = newSize;
+    let delivery = totalValue <= 1000 ? 100 : 0;
+    document.getElementById("totalItems").textContent = totalItems;
+    document.getElementById("cartValue").textContent = "₹" + totalValue.toFixed(2);
+    document.getElementById("deliveryCharges").innerHTML = delivery ? '<span class="charges-paid">₹100</span>' : '<span class="charges-free">Free</span>';
+    document.getElementById("totalAmount").textContent = "₹" + (totalValue + delivery).toFixed(2);
   }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
-  loadCart();
-  showToast("Size updated", "success");
-}
-
-function removeItem(index) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  cart.splice(index, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
-  loadCart();
-  showToast("Item removed", "warning");
-}
-
-function goToCheckout() {
-  if(!JSON.parse(localStorage.getItem("cart") || "[]").length){
-    showToast("Cart is empty", "error");
-    return;
+  function changeQty(i, c) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (!cart[i]) return;
+    cart[i].qty = Math.max(1, (cart[i].qty || 1) + c);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+    showToast("Quantity updated");
   }
-  location.href = "address.html";
-}
 
-function goToProduct(id) {
-  location.href = `productdetail.html?id=${id}`;
-}
+  function updateSize(i, s) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (!cart[i]) return;
+    const item = cart[i];
+    const exist = cart.findIndex((p, x) => x !== i && p._id === item._id && p.size === s);
+    if (exist !== -1) {
+      cart[exist].qty = (cart[exist].qty || 1) + (item.qty || 1);
+      cart.splice(i, 1);
+    } else {
+      cart[i].size = s;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+    showToast("Size updated");
+  }
 
-loadCart();
+  function removeItem(i) {
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    cart.splice(i, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    loadCart();
+    showToast("Item removed", "warning");
+  }
+
+  function goToCheckout() {
+    if (!JSON.parse(localStorage.getItem("cart") || "[]").length) return showToast("Cart is empty", "error");
+    location.href = "address.html";
+  }
+
+  function goToProduct(id) {
+    location.href = `productdetail.html?id=${id}`;
+  }
+
+  loadCart();
 </script>
 </body>
 </html>
