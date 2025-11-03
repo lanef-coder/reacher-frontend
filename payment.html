@@ -3,54 +3,112 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Payment | Reacher Stitch</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <title>Payment | ZKRAZE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
-    body { background: #0b0b0b; color: #fff; overflow-x: hidden; }
+    body { background: #fff; color: #111; overflow-x: hidden; }
 
     header {
-      background: #111; color: white;
-      display: flex; justify-content: center; align-items: center;
-      padding: 15px 25px; border-bottom: 2px solid #ff0000;
-      position: sticky; top: 0; z-index: 1000;
+      background: #f5ecd7;
+      color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      height: 63px;
+      border-bottom: 2px solid #ed8439;
     }
-    header h1 { font-size: 22px; font-weight: 800; color: #ff0000; text-transform: uppercase; letter-spacing: 1px; }
-    header nav { position: absolute; right: 25px; }
-    header nav a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; transition: 0.3s; }
-    header nav a:hover { color: #ff0000; }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: center;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      margin: 0;
+    }
+    .header-btn {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: #ed8439;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 20px;
+      font-size: 16px;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(237, 132, 57, 0.08);
+      text-decoration: none;
+    }
+    .header-btn:hover { background: #c79151; }
+    .header-btn .material-icons { font-size: 21px; margin-right: 2px; }
 
     .container {
-      max-width: 600px; margin: 40px auto;
-      background: #141414; padding: 25px;
-      border-radius: 12px; box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+      max-width: 600px;
+      margin: 40px auto;
+      background: #f9f6ef;
+      padding: 32px 28px 30px 28px;
+      border-radius: 14px;
+      box-shadow: 0 0 10px rgba(237, 132, 57, 0.12);
     }
-
-    h2 { text-align: center; color: #ff0000; margin-bottom: 20px; }
-    .summary { margin-bottom: 25px; line-height: 1.6; font-size: 15px; }
-    .summary strong { color: #ff4444; }
-
+    h2 {
+      text-align: center;
+      color: #ed8439;
+      margin-bottom: 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: 23px;
+    }
+    .summary {
+      margin-bottom: 23px;
+      line-height: 1.7;
+      font-size: 16px;
+      color: #333;
+    }
+    .summary strong { color: #ed8439; }
     .btn {
-      display: block; width: 100%; padding: 12px;
-      font-weight: 700; background: #ff0000;
-      border: none; border-radius: 6px; font-size: 16px;
-      cursor: pointer; color: white; transition: 0.3s;
+      display: block;
+      width: 100%;
+      padding: 14px;
+      font-weight: 700;
+      background: #ed8439;
+      border: none;
+      border-radius: 7px;
+      font-size: 17px;
+      cursor: pointer;
+      color: white;
+      transition: 0.3s;
       text-transform: uppercase;
+      margin-top: 14px;
+      box-shadow: 0 2px 8px rgba(237,132,57,0.08);
     }
-    .btn:hover { background: #cc0000; }
-
+    .btn:hover { background: #c79151; }
     .confirmation {
       display: none; text-align: center; margin-top: 30px;
       animation: fadeIn 1s ease-in-out;
     }
-    .confirmation h3 { color: #00ff7f; font-size: 22px; margin-bottom: 10px; }
-    .confirmation p { color: #ccc; font-size: 15px; }
-
+    .confirmation h3 { color: #00bd85; font-size: 22px; margin-bottom: 10px; }
+    .confirmation p { color: #555; font-size: 15.5px; }
     @keyframes fadeIn {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-
     .blast-overlay {
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
@@ -63,26 +121,32 @@
     }
     .blast-overlay h2 { margin-bottom: 10px; color: #00ff7f; }
     .blast-overlay p { color: #ccc; font-size: 16px; }
+    @media (max-width: 650px) {
+      .container { margin: 16px; padding: 14px 6vw; }
+      .logo { font-size: 20px; }
+      .header-btn { font-size: 14px; padding: 9px 13px; }
+      h2 { font-size: 16px; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>ZKRAZE</h1>
-    <nav><a href="index.html">Home</a></nav>
+    <div class="logo">ZKRAZE</div>
+    <a class="header-btn" href="address.html">
+      <span class="material-icons">arrow_back</span> Back to Address
+    </a>
   </header>
 
   <div class="container">
     <h2>Order Summary</h2>
     <div class="summary" id="orderSummary"></div>
     <button id="payBtn" class="btn">Pay Now</button>
-
     <div id="confirmation" class="confirmation">
       <h3>Order Confirmed ✅</h3>
       <p>Your invoice has been sent to your email 📩</p>
       <p>Your Order ID: <strong id="orderId"></strong></p>
     </div>
   </div>
-
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
     const summaryDiv = document.getElementById("orderSummary");
@@ -92,7 +156,6 @@
 
     let cart = JSON.parse(localStorage.getItem("cart"));
     let address = JSON.parse(localStorage.getItem("userAddress"));
-
     if (!cart || !cart.length) {
       cart = [{
         _id: "123",
@@ -102,7 +165,6 @@
         size: "M"
       }];
     }
-
     if (!address || !address.name) {
       address = {
         name: "Test User",
@@ -115,17 +177,14 @@
         pincode: "600001"
       };
     }
-
     let total = cart.reduce((acc, item) => {
       const price = parseFloat(item.price.toString().replace(/[^0-9.]/g, ""));
       const quantity = item.qty || item.quantity || 1;
       return acc + price * quantity;
     }, 0);
-
-    let itemsList = cart.map(i => 
+    let itemsList = cart.map(i =>
       `${i.name} (Size: ${i.size || "-"}, Qty: ${i.qty || i.quantity || 1})`
     ).join("<br>");
-
     summaryDiv.innerHTML = `
       <p><strong>Name:</strong> ${address.name}</p>
       <p><strong>Phone:</strong> ${address.phone}</p>
@@ -135,7 +194,6 @@
       <p><strong>Total Amount:</strong> ₹${total}</p>
     `;
 
-    // ✅ NEW: Merge same items before sending
     function mergeCartItems(cart) {
       const merged = [];
       cart.forEach(item => {
@@ -150,7 +208,6 @@
       });
       return merged;
     }
-
     async function enrichCartWithSKU(cart) {
       const enriched = [];
       for (const item of cart) {
@@ -200,7 +257,6 @@
             confirmationDiv.style.display = "block";
             payBtn.style.display = "none";
 
-            // ✅ Merge before enrich
             const mergedCart = mergeCartItems(cart);
             const updatedCart = await enrichCartWithSKU(mergedCart);
 
@@ -241,7 +297,7 @@
             }, 1000);
           },
           prefill: { name: address.name, email: address.email, contact: address.phone },
-          theme: { color: "#ff0000" },
+          theme: { color: "#ed8439" },
           modal: {
             ondismiss: function () {
               payBtn.disabled = false;
