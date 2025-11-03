@@ -13,7 +13,7 @@
 
     /* HEADER */
     header {
-      background: #f5ecd7; /* beige */
+      background: #f5ecd7;
       color: #111;
       display: flex;
       align-items: center;
@@ -48,11 +48,7 @@
       min-width: 41px;
       min-height: 41px;
     }
-
-    #cartContainer .material-icons {
-      font-size: 26px;
-      color: #111;
-    }
+    #cartContainer .material-icons { font-size: 26px; color: #111; }
     #cartCount {
       position: absolute;
       top: -4px;
@@ -66,10 +62,8 @@
       line-height: 14px;
       box-shadow: 0 0 5px rgba(0,0,0,0.15);
     }
-
     #cartContainer:hover { background: #f5ecd7; }
 
-    /* CONTAINER */
     .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
 
     /* IMAGE VIEWER */
@@ -130,7 +124,6 @@
       font-size: 20px;
       text-decoration: line-through;
       font-weight: 400;
-      letter-spacing: 0.3px;
     }
     .price {
       font-size: 28px;
@@ -194,14 +187,12 @@
       cursor: pointer;
       text-transform: uppercase;
       transition: 0.3s;
-      margin-bottom: 0;
       margin-top: 10px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
     }
     .add-cart:hover { background: #ed8439; }
-    .add-cart .material-icons { font-size: 20px; transform: translateY(2px); }
 
     .desc {
       margin-top: 35px;
@@ -235,11 +226,7 @@
       user-select: none;
     }
     .similar-item:hover { transform: translateY(-5px); border-color: #ed8439; }
-    .similar-item img { width: 100%; aspect-ratio: 1/1.2; object-fit: cover; border-radius: 6px; }
-    .similar-item h4 { font-size: 14px; margin-top: 8px; color: #111; }
-    .similar-item p { color: #ed8439; font-weight: 700; margin: 4px 0; }
 
-    /* TOASTS */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -268,13 +255,8 @@
 
     @media (max-width: 768px) {
       .logo { font-size: 20px; }
-      #cartContainer .material-icons { font-size: 24px; }
-      .product-title { font-size: 17px; }
-      .price { font-size: 18px; }
-      .mrp { font-size: 14px; }
       .add-cart { width: 100%; font-size: 15px; }
       .desc { font-size: 14px; }
-      .container { padding: 10px; }
       .similar-item { flex: 0 0 45vw; }
     }
   </style>
@@ -325,14 +307,13 @@
   <script>
     function updateCartCount() {
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      document.getElementById("cartCount").innerText = cart.length > 0 ? cart.length : '';
+      document.getElementById("cartCount").innerText = cart.length || '';
     }
     updateCartCount();
 
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get("id");
-    let product = null;
-    let currentImageIndex = 0;
+    let product = null, currentImageIndex = 0;
 
     function showToast(message, type = "success") {
       const container = document.getElementById("toastContainer");
@@ -350,35 +331,35 @@
     async function loadProduct() {
       const res = await fetch(`https://reacher-backend-production.up.railway.app/api/products/${id}`);
       product = await res.json();
+
       document.getElementById("pname").textContent = product.name;
       document.getElementById("pmrp").textContent = "₹649";
       document.getElementById("pprice").textContent = "₹" + product.price;
       document.getElementById("pdesc").textContent = product.description;
 
       const allImages = product.images || [];
-      if (allImages.length > 0) {
-        document.getElementById("mainImage").src = allImages[0];
-      }
+      if (allImages.length > 0) document.getElementById("mainImage").src = allImages[0];
 
       const sizeKeys = Object.keys(product.sizes || {}).filter(s => s && s !== "_id");
       document.getElementById("psizes").innerHTML = sizeKeys
         .map(s => `<button onclick="selectSize(this)">${s}</button>`)
         .join("");
+
       loadSimilar();
     }
 
     function nextImage() {
-      const allImages = product.images || [];
-      if (!allImages.length) return;
-      currentImageIndex = (currentImageIndex + 1) % allImages.length;
-      document.getElementById("mainImage").src = allImages[currentImageIndex];
+      const imgs = product.images || [];
+      if (!imgs.length) return;
+      currentImageIndex = (currentImageIndex + 1) % imgs.length;
+      document.getElementById("mainImage").src = imgs[currentImageIndex];
     }
 
     function prevImage() {
-      const allImages = product.images || [];
-      if (!allImages.length) return;
-      currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
-      document.getElementById("mainImage").src = allImages[currentImageIndex];
+      const imgs = product.images || [];
+      if (!imgs.length) return;
+      currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
+      document.getElementById("mainImage").src = imgs[currentImageIndex];
     }
 
     document.addEventListener("click", (e) => {
@@ -397,7 +378,7 @@
       input.value = q;
     }
 
-    // ✅ Updated addToCart with availableSizes included
+    // ✅ Final addToCart function that stores all available sizes
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
@@ -409,7 +390,6 @@
       const selectedSize = selected.textContent.trim();
       const quantity = parseInt(document.getElementById("quantity").value);
 
-      // Get all available sizes for the product
       const availableSizes = Array.from(document.querySelectorAll(".sizes button"))
         .map(btn => btn.textContent.trim());
 
@@ -425,14 +405,14 @@
           image: product.images?.[0] || "",
           size: selectedSize,
           quantity,
-          availableSizes // ✅ added property
+          availableSizes, // ✅ stored
         });
       }
 
       localStorage.setItem("cart", JSON.stringify(cart));
       updateCartCount();
       showToast("Added to cart!", "success");
-      setTimeout(() => (location.href = "cart.html"), 1000);
+      setTimeout(() => location.href = "cart.html", 1000);
     }
 
     async function loadSimilar() {
@@ -442,14 +422,12 @@
       let repeated = [];
       for (let i = 0; i < 5; i++) repeated = repeated.concat(similar);
       document.getElementById("similarGrid").innerHTML = repeated
-        .map(
-          p => `
-          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'" tabindex="0">
+        .map(p => `
+          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'">
             <img src="${p.images?.[0] || ''}" alt="${p.name}">
             <h4>${p.name}</h4>
             <p>₹${p.price}</p>
-          </div>`
-        )
+          </div>`)
         .join("");
     }
 
