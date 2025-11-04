@@ -83,7 +83,7 @@
       border-radius: 7px;
       background: #fff;
       font-size: 15px;
-      transition: border 0.3s;
+      transition: border 0.3s, box-shadow 0.3s;
     }
     input:focus, textarea:focus { border-color: #ed8439; }
     textarea { resize: none; height: 70px; }
@@ -125,6 +125,11 @@
       transition: opacity 0.5s, bottom 0.5s;
     }
     .toast.show { visibility: visible; opacity: 1; bottom: 57px; }
+
+    .error-field {
+      border-color: #ee3636 !important;
+      box-shadow: 0 0 5px rgba(238,54,54,0.3);
+    }
 
     @media (max-width: 600px) {
       .logo { font-size: 20px; }
@@ -232,26 +237,47 @@
     // --- Validation & Save ---
     document.getElementById("addressForm").addEventListener("submit", e => {
       e.preventDefault();
-      const name = document.getElementById("name").value.trim();
+
+      // Remove previous error highlights
+      document.querySelectorAll(".error-field").forEach(f => f.classList.remove("error-field"));
+
+      const fields = [
+        "name", "phone", "email", "address1", "address2", "city", "state", "pincode"
+      ].map(id => document.getElementById(id));
+
+      // find first empty field
+      const emptyField = fields.find(f => !f.value.trim());
+
+      if (emptyField) {
+        emptyField.classList.add("error-field");
+        emptyField.scrollIntoView({ behavior: "smooth", block: "center" });
+        emptyField.focus();
+        return showToast("Please fill all required fields!", "#ee3636");
+      }
+
       const phone = document.getElementById("phone").value.trim();
-      const email = document.getElementById("email").value.trim();
-      const address1 = document.getElementById("address1").value.trim();
-      const address2 = document.getElementById("address2").value.trim();
-      const city = document.getElementById("city").value.trim();
-      const state = document.getElementById("state").value.trim();
       const pincode = document.getElementById("pincode").value.trim();
 
-      if (!name || !phone || !email || !address1 || !address2 || !city || !state || !pincode)
-        return showToast("Please fill all required fields!", "#ee3636");
-      if (!/^[6-9]\d{9}$/.test(phone))
+      if (!/^[6-9]\d{9}$/.test(phone)) {
+        const f = document.getElementById("phone");
+        f.classList.add("error-field");
+        f.scrollIntoView({ behavior: "smooth", block: "center" });
+        f.focus();
         return showToast("Invalid phone number!", "#ee3636");
-      if (!/^\d{6}$/.test(pincode))
-        return showToast("Invalid pincode!", "#ee3636");
+      }
 
-      const addressObj = {
-        name, phone, email, address1, address2, city, state, pincode,
-        savedAt: new Date().toISOString()
-      };
+      if (!/^\d{6}$/.test(pincode)) {
+        const f = document.getElementById("pincode");
+        f.classList.add("error-field");
+        f.scrollIntoView({ behavior: "smooth", block: "center" });
+        f.focus();
+        return showToast("Invalid pincode!", "#ee3636");
+      }
+
+      const addressObj = {};
+      fields.forEach(f => addressObj[f.id] = f.value.trim());
+      addressObj.savedAt = new Date().toISOString();
+
       localStorage.setItem("userAddress", JSON.stringify(addressObj));
       showToast("Address saved! Redirecting...", "#00bd85");
       setTimeout(() => (window.location.href = "payment.html"), 1200);
