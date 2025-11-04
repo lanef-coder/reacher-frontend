@@ -342,18 +342,6 @@ function showToast(msg, type="success") {
   setTimeout(() => (t.style.display = "none"), 2500);
 }
 
-// ✅ Prevent duplicate same-size items → increase qty
-function addToCart(product) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  const existing = cart.find(i => i._id === product._id && i.size === product.size);
-  if (existing) {
-    existing.qty = (existing.qty || 1) + (product.qty || 1);
-  } else {
-    cart.push(product);
-  }
-  localStorage.setItem("cart", JSON.stringify(cart));
-}
-
 // ✅ Load and render cart
 function loadCart() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -381,19 +369,12 @@ function loadCart() {
     totalOld += (oldPrice || price) * qty;
     const discount = oldPrice > price ? Math.round(((oldPrice - price)/oldPrice)*100) : 0;
 
-    const sizeHTML = item.size ? `
-      <p>Size:
-        <select onchange="updateSize(${i}, this.value)">
-          ${(item.availableSizes || [item.size]).map(s=>`<option value="${s}" ${s===item.size?'selected':''}>${s}</option>`).join('')}
-        </select>
-      </p>` : "";
-
     return `
       <div class="cart-item">
         <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')">
         <div class="item-details">
           <h3>${item.name}</h3>
-          ${sizeHTML}
+          ${item.size ? `<p>Size: <strong>${item.size}</strong></p>` : ""}
           <p>Quantity:
             <span class="qty-controls">
               <button onclick="changeQty(${i},-1)">-</button>
@@ -419,7 +400,7 @@ function loadCart() {
   document.getElementById("cartValue").textContent = `₹${totalOld.toFixed(2)}`;
   document.getElementById("discountValue").textContent = `-₹${discountAmt.toFixed(2)}`;
   document.getElementById("deliveryCharges").innerHTML = deliveryText;
-  document.getElementById("totalAmount").textContent = `₹${(totalValue+delivery).toFixed(2)}`;
+  document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery).toFixed(2)}`;
 }
 
 function changeQty(i,c){
@@ -429,22 +410,6 @@ function changeQty(i,c){
   localStorage.setItem("cart",JSON.stringify(cart));
   loadCart();
   showToast("Quantity updated");
-}
-
-function updateSize(i,s){
-  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
-  if(!cart[i])return;
-  const item=cart[i];
-  const ex = cart.findIndex((p,x)=>x!==i && p._id===item._id && p.size===s);
-  if(ex!==-1){
-    cart[ex].qty = (cart[ex].qty||1)+(item.qty||1);
-    cart.splice(i,1);
-  } else {
-    cart[i].size=s;
-  }
-  localStorage.setItem("cart",JSON.stringify(cart));
-  loadCart();
-  showToast("Size updated");
 }
 
 function removeItem(i){
