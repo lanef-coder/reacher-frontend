@@ -201,32 +201,70 @@
       text-align: left;
     }
 
-    /* SIMILAR PRODUCTS */
-    .similar { margin-top: 60px; overflow: hidden; }
-    .similar h3 { font-size: 22px; color: #ed8439; margin-bottom: 20px; }
+    /* ✅ SIMILAR PRODUCTS - Compact style */
+    .similar {
+      margin-top: 60px;
+      overflow: hidden;
+    }
+    .similar h3 {
+      font-size: 20px;
+      color: #ed8439;
+      margin-bottom: 18px;
+    }
     .similar-grid {
       display: flex;
-      gap: 20px;
+      gap: 14px;
       overflow-x: auto;
       scroll-behavior: smooth;
-      padding-bottom: 10px;
+      padding-bottom: 8px;
       scrollbar-width: none;
     }
-    .similar-grid::-webkit-scrollbar { display: none; }
+    .similar-grid::-webkit-scrollbar {
+      display: none;
+    }
     .similar-item {
-      flex: 0 0 160px;
+      flex: 0 0 130px;
       background: #fff;
       border: 1px solid #ededed;
       text-align: center;
-      padding: 10px;
+      padding: 8px;
       cursor: pointer;
       transition: 0.3s;
-      border-radius: 8px;
+      border-radius: 6px;
       color: #111;
       user-select: none;
     }
-    .similar-item:hover { transform: translateY(-5px); border-color: #ed8439; }
+    .similar-item img {
+      width: 100%;
+      height: 130px;
+      object-fit: contain;
+      margin-bottom: 5px;
+    }
+    .similar-item h4 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+    .similar-item p {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ed8439;
+    }
+    .similar-item:hover {
+      transform: translateY(-3px);
+      border-color: #ed8439;
+    }
+    @media (max-width: 768px) {
+      .logo { font-size: 20px; }
+      .add-cart { width: 100%; font-size: 15px; }
+      .desc { font-size: 14px; }
+      .similar-item { flex: 0 0 100px; }
+      .similar-item img { height: 100px; }
+      .similar-item h4 { font-size: 12px; }
+      .similar-item p { font-size: 12px; }
+    }
 
+    /* Toast */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -252,13 +290,6 @@
     .toast.success { border-left: 5px solid #00b894; }
     .toast.error { border-left: 5px solid #ed8439; }
     @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
-
-    @media (max-width: 768px) {
-      .logo { font-size: 20px; }
-      .add-cart { width: 100%; font-size: 15px; }
-      .desc { font-size: 14px; }
-      .similar-item { flex: 0 0 45vw; }
-    }
   </style>
 </head>
 
@@ -378,7 +409,6 @@
       input.value = q;
     }
 
-    // ✅ Final addToCart function that stores all available sizes
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
@@ -405,7 +435,7 @@
           image: product.images?.[0] || "",
           size: selectedSize,
           quantity,
-          availableSizes, // ✅ stored
+          availableSizes,
         });
       }
 
@@ -427,8 +457,7 @@
             <img src="${p.images?.[0] || ''}" alt="${p.name}">
             <h4>${p.name}</h4>
             <p>₹${p.price}</p>
-          </div>`)
-        .join("");
+          </div>`).join("");
     }
 
     loadProduct();
