@@ -7,9 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 <style>
-  * {
-    margin:0; padding:0; box-sizing:border-box;
-  }
+  * { margin:0; padding:0; box-sizing:border-box; }
   body {
     background: #fff;
     color: #111;
@@ -45,12 +43,8 @@
     padding: 0 10px;
     transition: color 0.2s;
   }
-  .header-btn:hover {
-    color: #ed8439;
-  }
-  .header-btn .material-icons {
-    font-size: 24px;
-  }
+  .header-btn:hover { color: #ed8439; }
+  .header-btn .material-icons { font-size: 24px; }
 
   .logo {
     font-family: 'Playfair Display', serif;
@@ -96,10 +90,7 @@
     justify-content: center;
     min-height: 55vh;
   }
-  .cart-section {
-    flex: 2;
-    min-width: 350px;
-  }
+  .cart-section { flex: 2; min-width: 350px; }
   h2 {
     font-family: 'Playfair Display', serif;
     font-size: 28px;
@@ -140,10 +131,7 @@
     border-color: #ed8439;
     transform: scale(1.05);
   }
-  .item-details {
-    flex: 1;
-    margin-left: 25px;
-  }
+  .item-details { flex: 1; margin-left: 25px; }
   .item-details h3 {
     font-family: 'Playfair Display', serif;
     font-size: 20px;
@@ -171,6 +159,11 @@
     color: #ed8439;
     font-weight: 700;
     font-size: 20px;
+  }
+  .discount-tag {
+    color: #00b894;
+    font-weight: 600;
+    font-size: 14px;
   }
 
   /* Size selector and qty controls */
@@ -203,10 +196,7 @@
     cursor: pointer;
     transition: 0.3s;
   }
-  .qty-controls button:hover {
-    background: #ed8439;
-    color: #fff;
-  }
+  .qty-controls button:hover { background: #ed8439; color: #fff; }
   .qty-controls span {
     min-width: 25px;
     text-align: center;
@@ -306,64 +296,23 @@
 
   /* Responsive */
   @media (max-width: 850px) {
-    .container {
-      flex-direction: column;
-      align-items: center;
-    }
-    .summary {
-      position: relative;
-      top: 0;
-      margin-top: 20px;
-      width: 100%;
-      min-width: unset;
-    }
-    .cart-item {
-      flex-direction: row;
-    }
-    .item-details {
-      margin-left: 20px;
-    }
-    .remove-btn {
-      margin-left: 20px;
-      margin-top: 0;
-    }
+    .container { flex-direction: column; align-items: center; }
+    .summary { position: relative; top: 0; margin-top: 20px; width: 100%; min-width: unset; }
   }
-
   @media (max-width: 480px) {
-    .cart-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .item-details {
-      margin-left: 0;
-      margin-top: 10px;
-      width: 100%;
-    }
-    .remove-btn {
-      margin: 12px 0 0 0;
-      align-self: flex-start;
-      width: 100%;
-      text-align: center;
-    }
-    .header-btn.left, .header-btn.right {
-      font-size: 16px;
-      padding: 6px 8px;
-    }
+    .cart-item { flex-direction: column; align-items: flex-start; }
+    .item-details { margin-left: 0; margin-top: 10px; width: 100%; }
+    .remove-btn { margin: 12px 0 0 0; align-self: flex-start; width: 100%; text-align: center; }
   }
 </style>
 </head>
 <body>
-<!-- Toast notification -->
 <div id="toast" class="toast"></div>
 
 <header>
-  <button class="header-btn left" onclick="window.history.back()">
-    <span class="material-icons">arrow_back</span> Back
-  </button>
+  <button class="header-btn left" onclick="window.history.back()"><span class="material-icons">arrow_back</span> Back</button>
   <div class="logo">ZKRAZE</div>
-  <button class="header-btn right" onclick="window.location.href='index.html'">
-    Home <span class="material-icons">home</span>
-  </button>
+  <button class="header-btn right" onclick="window.location.href='index.html'">Home <span class="material-icons">home</span></button>
 </header>
 
 <div class="container">
@@ -380,6 +329,7 @@
     <h3>Order Summary</h3>
     <p><span>Total Items</span><span id="totalItems"></span></p>
     <p><span>Cart Value</span><span id="cartValue"></span></p>
+    <p><span>Discount</span><span id="discountValue"></span></p>
     <p><span>Delivery Charges</span><span id="deliveryCharges"></span></p>
     <p class="highlight"><span>Total Amount</span><span id="totalAmount"></span></p>
     <button class="checkout-btn" onclick="goToCheckout()">Checkout</button>
@@ -387,131 +337,133 @@
 </div>
 
 <script>
-  function showToast(message, type = "success") {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
-    toast.style.display = "block";
-    setTimeout(() => toast.style.display = "none", 2700);
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toast");
+  toast.textContent = message;
+  toast.className = `toast ${type}`;
+  toast.style.display = "block";
+  setTimeout(() => toast.style.display = "none", 2700);
+}
+
+function loadCart() {
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const container = document.getElementById("cartItems");
+  const summary = document.getElementById("summary");
+  const empty = document.getElementById("emptyCart");
+
+  if (!cart.length) {
+    container.innerHTML = "";
+    summary.style.display = "none";
+    empty.style.display = "block";
+    return;
   }
 
-  function loadCart() {
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const container = document.getElementById("cartItems");
-    const summary = document.getElementById("summary");
-    const empty = document.getElementById("emptyCart");
+  empty.style.display = "none";
+  summary.style.display = "block";
 
-    if (!cart.length) {
-      container.innerHTML = "";
-      summary.style.display = "none";
-      empty.style.display = "block";
-      return;
-    }
+  let totalItems = 0, totalValue = 0, totalOldValue = 0;
 
-    empty.style.display = "none";
-    summary.style.display = "block";
+  container.innerHTML = cart.map((item, index) => {
+    const price = parseFloat(item.price?.toString().replace(/[^\d.]/g, "")) || 0;
+    const oldPrice = parseFloat(item.oldPrice?.toString().replace(/[^\d.]/g, "")) || parseFloat(item.mrp?.toString().replace(/[^\d.]/g, "")) || 0;
+    const qty = Number(item.qty || 1);
 
-    let totalItems = 0, totalValue = 0;
+    totalItems += qty;
+    totalValue += price * qty;
+    totalOldValue += oldPrice ? oldPrice * qty : price * qty;
 
-    container.innerHTML = cart.map((item, index) => {
-      const price = parseFloat(item.price?.toString().replace(/[^\d.]/g, "")) || 0;
-      const qty = Number(item.qty || 1);
-      totalItems += qty;
-      totalValue += price * qty;
+    const discountPercent = oldPrice && oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
 
-      // Use availableSizes from cart item if present, else fallback to just the size selected
-      const availableSizes = item.availableSizes && item.availableSizes.length > 0 ? item.availableSizes : [item.size];
-      const sizeSection = item.size ? `
-        <p>Size:
-          <select onchange="updateSize(${index}, this.value)">
-            ${availableSizes.map(s => `<option value="${s}"${s === item.size ? " selected" : ""}>${s}</option>`).join("")}
-          </select>
-        </p>` : '';
+    const availableSizes = item.availableSizes?.length ? item.availableSizes : [item.size];
+    const sizeSection = item.size ? `
+      <p>Size:
+        <select onchange="updateSize(${index}, this.value)">
+          ${availableSizes.map(s => `<option value="${s}"${s === item.size ? " selected" : ""}>${s}</option>`).join("")}
+        </select>
+      </p>` : '';
 
-      return `
-        <div class="cart-item" role="listitem">
-          <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')" />
-          <div class="item-details">
-            <h3>${item.name || "(No Name)"}</h3>
-            ${sizeSection}
-            <p>Quantity:
-              <span class="qty-controls" role="group" aria-label="Quantity controls">
-                <button onclick="changeQty(${index}, -1)" aria-label="Decrease quantity for ${item.name}">-</button>
-                <span aria-live="polite" aria-atomic="true">${qty}</span>
-                <button onclick="changeQty(${index}, 1)" aria-label="Increase quantity for ${item.name}">+</button>
-              </span>
-            </p>
-            <div class="price-row">
-              ${item.mrp ? `<span class="mrp">₹${item.mrp}</span>` : ""}
-             <span class="price">₹${price}</span>
-            </div>
-
+    return `
+      <div class="cart-item" role="listitem">
+        <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')" />
+        <div class="item-details">
+          <h3>${item.name || "(No Name)"}</h3>
+          ${sizeSection}
+          <p>Quantity:
+            <span class="qty-controls" role="group" aria-label="Quantity controls">
+              <button onclick="changeQty(${index}, -1)">-</button>
+              <span>${qty}</span>
+              <button onclick="changeQty(${index}, 1)">+</button>
+            </span>
+          </p>
+          <div class="price-row">
+            ${oldPrice ? `<span class="mrp">₹${oldPrice}</span>` : ""}
+            <span class="price">₹${price}</span>
+            ${discountPercent ? `<span class="discount-tag">${discountPercent}% OFF</span>` : ""}
           </div>
-          <button class="remove-btn" onclick="removeItem(${index})" aria-label="Remove ${item.name}">Remove</button>
         </div>
-      `;
-    }).join('');
+        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+      </div>
+    `;
+  }).join('');
 
-    // Delivery Charges logic
-    let delivery = 0;
-    if (totalValue <= 1000) {
-      delivery = 100;
-    }
-    let deliveryText = delivery > 0 ? `<span class="charges-paid">₹${delivery}</span>` : `<span class="charges-free">Free</span>`;
+  const discountTotal = totalOldValue - totalValue;
+  let delivery = totalValue <= 1000 ? 100 : 0;
+  let deliveryText = delivery > 0 ? `<span class="charges-paid">₹${delivery}</span>` : `<span class="charges-free">Free</span>`;
 
-    document.getElementById("totalItems").textContent = totalItems;
-    document.getElementById("cartValue").textContent = `₹${totalValue.toFixed(2)}`;
-    document.getElementById("deliveryCharges").innerHTML = deliveryText;
-    document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery).toFixed(2)}`;
-  }
+  document.getElementById("totalItems").textContent = totalItems;
+  document.getElementById("cartValue").textContent = `₹${totalOldValue.toFixed(2)}`;
+  document.getElementById("discountValue").textContent = `-₹${discountTotal.toFixed(2)}`;
+  document.getElementById("deliveryCharges").innerHTML = deliveryText;
+  document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery).toFixed(2)}`;
+}
 
-  function changeQty(i, c) {
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (!cart[i]) return;
-    cart[i].qty = Math.max(1, (cart[i].qty || 1) + c);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    loadCart();
-    showToast("Quantity updated");
-  }
-
-  function updateSize(i, s) {
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (!cart[i]) return;
-    const item = cart[i];
-    const existingIndex = cart.findIndex((p, x) => x !== i && p._id === item._id && p.size === s);
-    if (existingIndex !== -1) {
-      cart[existingIndex].qty = (cart[existingIndex].qty || 1) + (item.qty || 1);
-      cart.splice(i, 1);
-    } else {
-      cart[i].size = s;
-    }
-    localStorage.setItem("cart", JSON.stringify(cart));
-    loadCart();
-    showToast("Size updated");
-  }
-
-  function removeItem(i) {
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cart.splice(i, 1);
-    localStorage.setItem("cart", JSON.stringify(cart));
-    loadCart();
-    showToast("Item removed", "warning");
-  }
-
-  function goToCheckout() {
-    let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (!cart.length) {
-      showToast("Cart is empty", "error");
-      return;
-    }
-    location.href = "address.html";
-  }
-
-  function goToProduct(id) {
-    location.href = `productdetail.html?id=${id}`;
-  }
-
+function changeQty(i, c) {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (!cart[i]) return;
+  cart[i].qty = Math.max(1, (cart[i].qty || 1) + c);
+  localStorage.setItem("cart", JSON.stringify(cart));
   loadCart();
+  showToast("Quantity updated");
+}
+
+function updateSize(i, s) {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (!cart[i]) return;
+  const item = cart[i];
+  const existingIndex = cart.findIndex((p, x) => x !== i && p._id === item._id && p.size === s);
+  if (existingIndex !== -1) {
+    cart[existingIndex].qty = (cart[existingIndex].qty || 1) + (item.qty || 1);
+    cart.splice(i, 1);
+  } else {
+    cart[i].size = s;
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+  showToast("Size updated");
+}
+
+function removeItem(i) {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  cart.splice(i, 1);
+  localStorage.setItem("cart", JSON.stringify(cart));
+  loadCart();
+  showToast("Item removed", "warning");
+}
+
+function goToCheckout() {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (!cart.length) {
+    showToast("Cart is empty", "error");
+    return;
+  }
+  location.href = "address.html";
+}
+
+function goToProduct(id) {
+  location.href = `productdetail.html?id=${id}`;
+}
+
+loadCart();
 </script>
 </body>
 </html>
