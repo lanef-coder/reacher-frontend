@@ -12,7 +12,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
     body { background: #fff; color: #111; overflow-x: hidden; }
 
-    /* HEADER */
     header {
       background: #f5ecd7;
       color: #111;
@@ -66,7 +65,6 @@
 
     .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
 
-    /* IMAGE VIEWER */
     .image-viewer {
       position: relative;
       width: 100%;
@@ -102,7 +100,6 @@
     .arrow.left { left: 10px; }
     .arrow.right { right: 10px; }
 
-    /* PRODUCT INFO */
     .info { text-align: center; margin-top: 25px; }
     .product-title {
       font-size: 24px;
@@ -198,7 +195,6 @@
 
     .desc { margin-top: 35px; color: #333; line-height: 1.7; text-align: left; }
 
-    /* SIMILAR PRODUCTS */
     .similar { margin-top: 60px; overflow: hidden; }
     .similar h3 { font-size: 20px; color: #ed8439; margin-bottom: 18px; }
     .similar-grid {
@@ -234,7 +230,6 @@
       .similar-item h4, .similar-item p { font-size: 12px; }
     }
 
-    /* Toast */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -316,7 +311,8 @@
 
     function updateCartCount() {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      document.getElementById("cartCount").innerText = cart.length || '';
+      const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+      document.getElementById("cartCount").innerText = totalQty || '';
     }
     updateCartCount();
 
@@ -340,7 +336,6 @@
 
         document.getElementById("pname").textContent = product.name;
 
-        // ✅ Show strike-through old price
         if (product.oldPrice && product.oldPrice !== product.price) {
           document.getElementById("pmrp").textContent = "₹" + product.oldPrice;
           document.getElementById("pmrp").style.display = "inline";
@@ -396,7 +391,7 @@
       input.value = q;
     }
 
-    // ✅ Improved add-to-cart logic
+    // ✅ Fixed add-to-cart logic (merge same product+size)
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
@@ -407,12 +402,11 @@
 
       const selectedSize = selected.textContent.trim();
       const quantity = parseInt(document.getElementById("quantity").value);
-
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const existing = cart.find(item => item._id === product._id && item.size === selectedSize);
+      const existing = cart.find(i => i._id === product._id && i.size === selectedSize);
 
       if (existing) {
-        existing.quantity += quantity; // increase qty if exists
+        existing.quantity = (existing.quantity || 1) + quantity;
       } else {
         cart.push({
           _id: product._id,
