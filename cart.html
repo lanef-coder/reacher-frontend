@@ -442,9 +442,10 @@
               </span>
             </p>
             <div class="price-row">
-              <span class="mrp">₹649</span>
-              <span class="price">₹${price}</span>
+              ${item.mrp ? `<span class="mrp">₹${item.mrp}</span>` : ""}
+             <span class="price">₹${price}</span>
             </div>
+
           </div>
           <button class="remove-btn" onclick="removeItem(${index})" aria-label="Remove ${item.name}">Remove</button>
         </div>
