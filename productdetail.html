@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Product Details | ZKRAZE</title>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
@@ -17,12 +18,12 @@
       color: #111;
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: 15px 20px;
       border-bottom: 1px solid #f1e6c8;
       position: sticky;
       top: 0;
       z-index: 1000;
-      justify-content: center;
     }
     .logo {
       font-family: 'Playfair Display', serif;
@@ -31,7 +32,6 @@
       color: #111;
       letter-spacing: 2px;
       text-transform: uppercase;
-      text-align: center;
     }
     #cartContainer {
       position: absolute;
@@ -42,13 +42,14 @@
       justify-content: center;
       border-radius: 6px;
       cursor: pointer;
-      transition: 0.3s;
       background: transparent;
       padding: 6px 10px;
       min-width: 41px;
       min-height: 41px;
+      transition: 0.3s;
     }
     #cartContainer .material-icons { font-size: 26px; color: #111; }
+    #cartContainer:hover { background: #f5ecd7; }
     #cartCount {
       position: absolute;
       top: -4px;
@@ -62,7 +63,6 @@
       line-height: 14px;
       box-shadow: 0 0 5px rgba(0,0,0,0.15);
     }
-    #cartContainer:hover { background: #f5ecd7; }
 
     .container { max-width: 1100px; margin: 30px auto; padding: 20px; }
 
@@ -80,8 +80,8 @@
     .image-viewer img {
       width: 100%;
       height: auto;
-      display: block;
       object-fit: cover;
+      display: block;
       transition: transform 0.3s;
       cursor: zoom-in;
     }
@@ -119,17 +119,8 @@
       gap: 15px;
       margin: 15px 0 25px;
     }
-    .mrp {
-      color: #888;
-      font-size: 20px;
-      text-decoration: line-through;
-      font-weight: 400;
-    }
-    .price {
-      font-size: 28px;
-      font-weight: 800;
-      color: #ed8439;
-    }
+    .mrp { color: #888; font-size: 20px; text-decoration: line-through; }
+    .price { font-size: 28px; font-weight: 800; color: #ed8439; }
 
     .sizes { margin: 25px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .sizes button {
@@ -187,30 +178,18 @@
       cursor: pointer;
       text-transform: uppercase;
       transition: 0.3s;
-      margin-top: 10px;
       display: inline-flex;
       align-items: center;
       gap: 8px;
+      margin-top: 10px;
     }
     .add-cart:hover { background: #ed8439; }
 
-    .desc {
-      margin-top: 35px;
-      color: #333;
-      line-height: 1.7;
-      text-align: left;
-    }
+    .desc { margin-top: 35px; color: #333; line-height: 1.7; text-align: left; }
 
-    /* ✅ SIMILAR PRODUCTS - Compact style */
-    .similar {
-      margin-top: 60px;
-      overflow: hidden;
-    }
-    .similar h3 {
-      font-size: 20px;
-      color: #ed8439;
-      margin-bottom: 18px;
-    }
+    /* SIMILAR PRODUCTS */
+    .similar { margin-top: 60px; overflow: hidden; }
+    .similar h3 { font-size: 20px; color: #ed8439; margin-bottom: 18px; }
     .similar-grid {
       display: flex;
       gap: 14px;
@@ -219,9 +198,7 @@
       padding-bottom: 8px;
       scrollbar-width: none;
     }
-    .similar-grid::-webkit-scrollbar {
-      display: none;
-    }
+    .similar-grid::-webkit-scrollbar { display: none; }
     .similar-item {
       flex: 0 0 130px;
       background: #fff;
@@ -231,37 +208,19 @@
       cursor: pointer;
       transition: 0.3s;
       border-radius: 6px;
-      color: #111;
-      user-select: none;
     }
-    .similar-item img {
-      width: 100%;
-      height: 130px;
-      object-fit: contain;
-      margin-bottom: 5px;
-    }
-    .similar-item h4 {
-      font-size: 13px;
-      font-weight: 600;
-      margin-bottom: 3px;
-    }
-    .similar-item p {
-      font-size: 13px;
-      font-weight: 700;
-      color: #ed8439;
-    }
-    .similar-item:hover {
-      transform: translateY(-3px);
-      border-color: #ed8439;
-    }
+    .similar-item img { width: 100%; height: 130px; object-fit: contain; margin-bottom: 5px; }
+    .similar-item h4 { font-size: 13px; font-weight: 600; margin-bottom: 3px; color: #111; }
+    .similar-item p { font-size: 13px; font-weight: 700; color: #ed8439; }
+    .similar-item:hover { transform: translateY(-3px); border-color: #ed8439; }
+
     @media (max-width: 768px) {
       .logo { font-size: 20px; }
       .add-cart { width: 100%; font-size: 15px; }
       .desc { font-size: 14px; }
       .similar-item { flex: 0 0 100px; }
       .similar-item img { height: 100px; }
-      .similar-item h4 { font-size: 12px; }
-      .similar-item p { font-size: 12px; }
+      .similar-item h4, .similar-item p { font-size: 12px; }
     }
 
     /* Toast */
@@ -275,7 +234,7 @@
       z-index: 3000;
     }
     .toast {
-      background: rgba(250, 240, 230, 0.98);
+      background: rgba(250,240,230,0.98);
       border: 1px solid #f6e5ca;
       color: #111;
       padding: 12px 18px;
@@ -336,47 +295,56 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
+    const backendURL = "https://reacher-backend-production.up.railway.app";
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get("id");
+    const type = urlParams.get("type") || "product";
+    const apiEndpoint = type === "hoodie" ? "hoodies" : "products";
+
+    let product = null, currentImageIndex = 0;
+
     function updateCartCount() {
-      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       document.getElementById("cartCount").innerText = cart.length || '';
     }
     updateCartCount();
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    let product = null, currentImageIndex = 0;
-
-    function showToast(message, type = "success") {
-      const container = document.getElementById("toastContainer");
-      const toast = document.createElement("div");
-      toast.className = `toast ${type}`;
-      toast.textContent = message;
-      container.appendChild(toast);
+    function showToast(msg, type = "success") {
+      const c = document.getElementById("toastContainer");
+      const t = document.createElement("div");
+      t.className = `toast ${type}`;
+      t.textContent = msg;
+      c.appendChild(t);
       setTimeout(() => {
-        toast.style.opacity = "0";
-        toast.style.transform = "translateY(-10px)";
-        setTimeout(() => toast.remove(), 400);
+        t.style.opacity = "0";
+        t.style.transform = "translateY(-10px)";
+        setTimeout(() => t.remove(), 400);
       }, 2000);
     }
 
     async function loadProduct() {
-      const res = await fetch(`https://reacher-backend-production.up.railway.app/api/products/${id}`);
-      product = await res.json();
+      try {
+        const res = await fetch(`${backendURL}/api/${apiEndpoint}/${id}`);
+        product = await res.json();
 
-      document.getElementById("pname").textContent = product.name;
-      document.getElementById("pmrp").textContent = "₹649";
-      document.getElementById("pprice").textContent = "₹" + product.price;
-      document.getElementById("pdesc").textContent = product.description;
+        document.getElementById("pname").textContent = product.name;
+        document.getElementById("pmrp").textContent = "₹649";
+        document.getElementById("pprice").textContent = "₹" + product.price;
+        document.getElementById("pdesc").textContent = product.description;
 
-      const allImages = product.images || [];
-      if (allImages.length > 0) document.getElementById("mainImage").src = allImages[0];
+        const allImages = (product.images || []).map(img => img.replace("http://localhost:5000", backendURL));
+        if (allImages.length > 0) document.getElementById("mainImage").src = allImages[0];
 
-      const sizeKeys = Object.keys(product.sizes || {}).filter(s => s && s !== "_id");
-      document.getElementById("psizes").innerHTML = sizeKeys
-        .map(s => `<button onclick="selectSize(this)">${s}</button>`)
-        .join("");
+        const sizeKeys = Object.keys(product.sizes || {}).filter(s => s && s !== "_id");
+        document.getElementById("psizes").innerHTML = sizeKeys
+          .map(s => `<button onclick="selectSize(this)">${s}</button>`)
+          .join("");
 
-      loadSimilar();
+        loadSimilar();
+      } catch (err) {
+        console.error(err);
+        showToast("Product not found!", "error");
+      }
     }
 
     function nextImage() {
@@ -393,7 +361,7 @@
       document.getElementById("mainImage").src = imgs[currentImageIndex];
     }
 
-    document.addEventListener("click", (e) => {
+    document.addEventListener("click", e => {
       if (e.target.id === "mainImage") e.target.classList.toggle("zoomed");
     });
 
@@ -419,7 +387,6 @@
 
       const selectedSize = selected.textContent.trim();
       const quantity = parseInt(document.getElementById("quantity").value);
-
       const availableSizes = Array.from(document.querySelectorAll(".sizes button"))
         .map(btn => btn.textContent.trim());
 
@@ -436,6 +403,7 @@
           size: selectedSize,
           quantity,
           availableSizes,
+          type
         });
       }
 
@@ -446,18 +414,20 @@
     }
 
     async function loadSimilar() {
-      const res = await fetch("https://reacher-backend-production.up.railway.app/api/products");
-      const data = await res.json();
-      const similar = data.filter(p => p._id !== id && p.type !== "ad");
-      let repeated = [];
-      for (let i = 0; i < 5; i++) repeated = repeated.concat(similar);
-      document.getElementById("similarGrid").innerHTML = repeated
-        .map(p => `
-          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}'">
-            <img src="${p.images?.[0] || ''}" alt="${p.name}">
-            <h4>${p.name}</h4>
-            <p>₹${p.price}</p>
-          </div>`).join("");
+      try {
+        const res = await fetch(`${backendURL}/api/${apiEndpoint}`);
+        const data = await res.json();
+        const similar = data.filter(p => p._id !== id);
+        document.getElementById("similarGrid").innerHTML = similar.slice(0, 10)
+          .map(p => `
+            <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}&type=${type}'">
+              <img src="${p.images?.[0]?.replace('http://localhost:5000', backendURL) || ''}" alt="${p.name}">
+              <h4>${p.name}</h4>
+              <p>₹${p.price}</p>
+            </div>`).join("");
+      } catch (err) {
+        console.error("Failed to load similar:", err);
+      }
     }
 
     loadProduct();

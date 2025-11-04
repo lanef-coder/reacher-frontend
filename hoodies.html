@@ -47,9 +47,7 @@
       transition: 0.3s;
     }
 
-    .material-icons:hover {
-      color: #ed8439;
-    }
+    .material-icons:hover { color: #ed8439; }
 
     #cartContainer {
       position: relative;
@@ -104,7 +102,6 @@
     .product {
       background: #fff;
       border: 1px solid #ededed;
-      width: 100%;
       max-width: 260px;
       color: #111;
       transition: 0.3s;
@@ -123,7 +120,6 @@
       width: 100%;
       height: 340px;
       object-fit: contain;
-      background: #fff;
       border-bottom: 1px solid #ededed;
       padding: 8px;
     }
@@ -144,11 +140,7 @@
       gap: 7px;
     }
 
-    .mrp {
-      color: #888;
-      font-size: 15px;
-      text-decoration: line-through;
-    }
+    .mrp { color: #888; font-size: 15px; text-decoration: line-through; }
 
     .product p {
       font-size: 16px;
@@ -172,13 +164,11 @@
 
     .buy-btn:hover { background: #ed8439; }
 
-    /* MOBILE */
     @media (max-width: 600px) {
       .product-slider {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
       }
-
       .product img { height: 220px; }
       .product { max-width: 180px; }
       .product h3 { font-size: 13px; }
@@ -190,7 +180,6 @@
 </head>
 
 <body>
-  <!-- HEADER -->
   <header>
     <span class="material-icons" onclick="history.back()">arrow_back</span>
     <div class="logo">ZKRAZE</div>
@@ -200,7 +189,6 @@
     </div>
   </header>
 
-  <!-- PRODUCTS -->
   <section class="product-section">
     <h2 class="product-title">Hoodies Collection</h2>
     <div class="product-slider" id="hoodieContainer"></div>
@@ -213,6 +201,7 @@
       let cart = JSON.parse(localStorage.getItem("cart") || "[]");
       document.getElementById("cartCount").innerText = cart.length;
     }
+
     updateCartCount();
 
     async function loadHoodies() {
@@ -230,7 +219,7 @@
                 <span class="mrp">₹999</span>
                 <p>₹${h.price}</p>
               </div>
-              <button class="buy-btn" onclick="location.href='productdetail.html?id=${h._id}'">Buy Now</button>
+              <button class="buy-btn" onclick="location.href='productdetail.html?id=${h._id}&type=hoodie'">Buy Now</button>
             </div>
           </div>
         `).join("");
