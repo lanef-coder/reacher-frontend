@@ -8,12 +8,7 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    background: #fff;
-    color: #111;
-    font-family: 'Poppins', sans-serif;
-    min-height: 100vh;
-  }
+  body { background: #fff; color: #111; font-family: 'Poppins', sans-serif; min-height: 100vh; }
 
   /* HEADER */
   header {
@@ -27,25 +22,20 @@
     position: sticky;
     top: 0;
     z-index: 1000;
-    position: relative;
   }
-
   .header-btn {
     background: none;
     border: none;
     color: #111;
     font-size: 18px;
-    font-family: 'Poppins', sans-serif;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
-    padding: 0 10px;
     transition: color 0.2s;
   }
   .header-btn:hover { color: #ed8439; }
   .header-btn .material-icons { font-size: 24px; }
-
   .logo {
     font-family: 'Playfair Display', serif;
     font-size: 28px;
@@ -53,17 +43,12 @@
     color: #111;
     letter-spacing: 2px;
     text-transform: uppercase;
-    text-align: center;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
   }
 
   /* Toast */
   .toast {
     position: fixed;
-    top: 10px;
+    top: 15px;
     left: 50%;
     transform: translateX(-50%);
     padding: 12px 22px;
@@ -71,7 +56,7 @@
     font-weight: 600;
     display: none;
     z-index: 2000;
-    min-width: 250px;
+    min-width: 260px;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0,0,0,0.26);
   }
@@ -98,7 +83,7 @@
     margin-bottom: 20px;
   }
 
-  /* Cart Item Card */
+  /* Cart Item */
   .cart-item {
     display: flex;
     align-items: center;
@@ -110,13 +95,9 @@
     box-shadow: 0 2px 8px rgba(237,132,57,0.12);
     transition: 0.3s ease;
   }
-  .cart-item:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 5px 18px rgba(237,132,57,0.14);
-  }
+  .cart-item:hover { transform: translateY(-4px); box-shadow: 0 5px 18px rgba(237,132,57,0.14); }
   .cart-item img {
-    width: 130px;
-    height: 130px;
+    width: 130px; height: 130px;
     object-fit: contain;
     border-radius: 10px;
     background: #fff;
@@ -127,10 +108,8 @@
     box-shadow: 0 2px 8px rgba(237,132,57,0.15);
     flex-shrink: 0;
   }
-  .cart-item img:hover {
-    border-color: #ed8439;
-    transform: scale(1.05);
-  }
+  .cart-item img:hover { border-color: #ed8439; transform: scale(1.05); }
+
   .item-details { flex: 1; margin-left: 25px; }
   .item-details h3 {
     font-family: 'Playfair Display', serif;
@@ -138,52 +117,18 @@
     color: #111;
     margin-bottom: 6px;
   }
-  .item-details p {
-    color: #6d665e;
-    margin-bottom: 6px;
-    font-size: 15px;
-  }
+  .item-details p { color: #6d665e; margin-bottom: 6px; font-size: 15px; }
   .price-row {
     display: flex;
     gap: 12px;
     align-items: center;
     margin-top: 8px;
   }
-  .mrp {
-    color: #b5ad98;
-    font-size: 18px;
-    text-decoration: line-through;
-    font-weight: 400;
-  }
-  .price {
-    color: #ed8439;
-    font-weight: 700;
-    font-size: 20px;
-  }
-  .discount-tag {
-    color: #00b894;
-    font-weight: 600;
-    font-size: 14px;
-  }
+  .mrp { color: #b5ad98; font-size: 18px; text-decoration: line-through; }
+  .price { color: #ed8439; font-weight: 700; font-size: 20px; }
+  .discount-tag { color: #00b894; font-weight: 600; font-size: 14px; }
 
-  select, .qty-controls button, .qty-controls span {
-    font-size: 15px;
-    border-radius: 6px;
-  }
-  select {
-    background: #fff;
-    color: #111;
-    border: 1px solid #eedbbf;
-    padding: 6px 10px;
-    font-family: 'Poppins', sans-serif;
-    margin-left: 5px;
-  }
-  .qty-controls {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: 5px;
-  }
+  .qty-controls { display: inline-flex; align-items: center; gap: 6px; margin-left: 5px; }
   .qty-controls button {
     background: #eedbbf;
     color: #111;
@@ -214,15 +159,12 @@
     font-weight: 600;
     transition: 0.3s;
     font-size: 15px;
-    box-shadow: 0 2px 8px rgba(237,132,57,0.1);
     margin-left: 30px;
     flex-shrink: 0;
   }
-  .remove-btn:hover {
-    background: linear-gradient(135deg, #c79151, #ed8439);
-    transform: scale(1.05);
-  }
+  .remove-btn:hover { transform: scale(1.05); }
 
+  /* Summary */
   .summary {
     flex: 1;
     background: #f8f6ee;
@@ -242,15 +184,8 @@
     margin-bottom: 20px;
     border-bottom: 1px solid #eedbbf;
     padding-bottom: 10px;
-    text-align: left;
   }
-  .summary p {
-    font-size: 15px;
-    margin: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    color: #61452e;
-  }
+  .summary p { font-size: 15px; margin: 10px 0; display: flex; justify-content: space-between; color: #61452e; }
   .summary .highlight {
     font-weight: 700;
     color: #ed8439;
@@ -273,13 +208,9 @@
     cursor: pointer;
     margin-top: 15px;
     transition: 0.3s;
-    text-transform: uppercase;
-    box-shadow: 0 2px 8px rgba(237,132,57,0.12);
   }
-  .checkout-btn:hover {
-    background: linear-gradient(135deg, #c79151, #ed8439);
-    transform: scale(1.03);
-  }
+  .checkout-btn:hover { transform: scale(1.03); }
+
   .empty-cart {
     text-align: center;
     color: #aaa;
@@ -294,22 +225,23 @@
 
   @media (max-width: 850px) {
     .container { flex-direction: column; align-items: center; }
-    .summary { position: relative; top: 0; margin-top: 20px; width: 100%; min-width: unset; }
+    .summary { position: relative; top: 0; margin-top: 20px; width: 100%; }
   }
   @media (max-width: 480px) {
     .cart-item { flex-direction: column; align-items: flex-start; }
     .item-details { margin-left: 0; margin-top: 10px; width: 100%; }
-    .remove-btn { margin: 12px 0 0 0; align-self: flex-start; width: 100%; text-align: center; }
+    .remove-btn { width: 100%; margin-top: 12px; text-align: center; }
   }
 </style>
 </head>
+
 <body>
 <div id="toast" class="toast"></div>
 
 <header>
-  <button class="header-btn left" onclick="window.history.back()"><span class="material-icons">arrow_back</span> Back</button>
+  <button class="header-btn" onclick="window.history.back()"><span class="material-icons">arrow_back</span> Back</button>
   <div class="logo">ZKRAZE</div>
-  <button class="header-btn right" onclick="window.location.href='index.html'">Home <span class="material-icons">home</span></button>
+  <button class="header-btn" onclick="window.location.href='index.html'">Home <span class="material-icons">home</span></button>
 </header>
 
 <div class="container">
@@ -342,12 +274,18 @@ function showToast(msg, type="success") {
   setTimeout(() => (t.style.display = "none"), 2500);
 }
 
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  document.title = `Your Cart (${cart.length}) | ZKRAZE`;
+}
+
 // ✅ Load and render cart
 function loadCart() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
   const cont = document.getElementById("cartItems");
   const sum = document.getElementById("summary");
   const empty = document.getElementById("emptyCart");
+  updateCartCount();
 
   if (!cart.length) {
     cont.innerHTML = "";
@@ -363,7 +301,7 @@ function loadCart() {
   cont.innerHTML = cart.map((item, i) => {
     const price = Number(item.price) || 0;
     const oldPrice = Number(item.oldPrice) || 0;
-    const qty = Number(item.qty) || 1;
+    const qty = Number(item.quantity) || 1;
     totalItems += qty;
     totalValue += price * qty;
     totalOld += (oldPrice || price) * qty;
@@ -371,7 +309,7 @@ function loadCart() {
 
     return `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')">
+        <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}','${item.type}')">
         <div class="item-details">
           <h3>${item.name}</h3>
           ${item.size ? `<p>Size: <strong>${item.size}</strong></p>` : ""}
@@ -406,7 +344,7 @@ function loadCart() {
 function changeQty(i,c){
   let cart = JSON.parse(localStorage.getItem("cart")||"[]");
   if(!cart[i])return;
-  cart[i].qty = Math.max(1,(cart[i].qty||1)+c);
+  cart[i].quantity = Math.max(1,(cart[i].quantity||1)+c);
   localStorage.setItem("cart",JSON.stringify(cart));
   loadCart();
   showToast("Quantity updated");
@@ -426,11 +364,13 @@ function goToCheckout(){
   location.href="address.html";
 }
 
-function goToProduct(id){
-  location.href=`productdetail.html?id=${id}`;
+function goToProduct(id, type){
+  if(!id) return showToast("Invalid product","error");
+  location.href=`productdetail.html?id=${id}&type=${type||'product'}`;
 }
 
 loadCart();
+window.addEventListener("storage", loadCart);
 </script>
 </body>
 </html>
