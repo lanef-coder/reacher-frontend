@@ -340,7 +340,7 @@
 
         document.getElementById("pname").textContent = product.name;
 
-        // ✅ Show original (struck-through) price if available
+        // ✅ Show strike-through old price
         if (product.oldPrice && product.oldPrice !== product.price) {
           document.getElementById("pmrp").textContent = "₹" + product.oldPrice;
           document.getElementById("pmrp").style.display = "inline";
@@ -396,6 +396,7 @@
       input.value = q;
     }
 
+    // ✅ Improved add-to-cart logic
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
@@ -406,22 +407,21 @@
 
       const selectedSize = selected.textContent.trim();
       const quantity = parseInt(document.getElementById("quantity").value);
-      const availableSizes = Array.from(document.querySelectorAll(".sizes button"))
-        .map(btn => btn.textContent.trim());
 
-      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-      const existingItem = cart.find(item => item._id === product._id && item.size === selectedSize);
-      if (existingItem) {
-        existingItem.quantity += quantity;
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const existing = cart.find(item => item._id === product._id && item.size === selectedSize);
+
+      if (existing) {
+        existing.quantity += quantity; // increase qty if exists
       } else {
         cart.push({
           _id: product._id,
           name: product.name,
-          price: product.price,
           image: product.images?.[0] || "",
+          price: product.price,
+          oldPrice: product.oldPrice || null,
           size: selectedSize,
           quantity,
-          availableSizes,
           type
         });
       }
@@ -443,8 +443,7 @@
               <img src="${p.images?.[0]?.replace('http://localhost:5000', backendURL) || ''}" alt="${p.name}">
               <h4>${p.name}</h4>
               <p>
-                ${p.oldPrice ? `<span style="text-decoration:line-through;color:#888;font-weight:500;margin-right:4px;">₹${p.oldPrice}</span>` : ''}
-                ₹${p.price}
+                ${p.oldPrice ? `<span style="text-decoration:line-through;color:#888;font-weight:500;margin-right:4px;">₹${p.oldPrice}</span>` : ''} ₹${p.price}
               </p>
             </div>`).join("");
       } catch (err) {
