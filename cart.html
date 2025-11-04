@@ -166,7 +166,6 @@
     font-size: 14px;
   }
 
-  /* Size selector and qty controls */
   select, .qty-controls button, .qty-controls span {
     font-size: 15px;
     border-radius: 6px;
@@ -224,7 +223,6 @@
     transform: scale(1.05);
   }
 
-  /* Summary */
   .summary {
     flex: 1;
     background: #f8f6ee;
@@ -294,7 +292,6 @@
     font-weight: 700;
   }
 
-  /* Responsive */
   @media (max-width: 850px) {
     .container { flex-direction: column; align-items: center; }
     .summary { position: relative; top: 0; margin-top: 20px; width: 100%; min-width: unset; }
@@ -316,16 +313,16 @@
 </header>
 
 <div class="container">
-  <section class="cart-section" aria-label="Your Shopping Bag Items">
+  <section class="cart-section">
     <h2>Your Shopping Bag</h2>
-    <div id="cartItems" role="list"></div>
+    <div id="cartItems"></div>
     <div id="emptyCart" class="empty-cart" style="display:none;">
       Your bag is empty.<br><br>
       <a href="index.html">Continue Shopping →</a>
     </div>
   </section>
 
-  <aside id="summary" class="summary" aria-label="Order Summary" style="display:none;">
+  <aside id="summary" class="summary" style="display:none;">
     <h3>Order Summary</h3>
     <p><span>Total Items</span><span id="totalItems"></span></p>
     <p><span>Cart Value</span><span id="cartValue"></span></p>
@@ -337,130 +334,135 @@
 </div>
 
 <script>
-function showToast(message, type = "success") {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.className = `toast ${type}`;
-  toast.style.display = "block";
-  setTimeout(() => toast.style.display = "none", 2700);
+function showToast(msg, type="success") {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = `toast ${type}`;
+  t.style.display = "block";
+  setTimeout(() => (t.style.display = "none"), 2500);
 }
 
+// ✅ Prevent duplicate same-size items → increase qty
+function addToCart(product) {
+  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const existing = cart.find(i => i._id === product._id && i.size === product.size);
+  if (existing) {
+    existing.qty = (existing.qty || 1) + (product.qty || 1);
+  } else {
+    cart.push(product);
+  }
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+// ✅ Load and render cart
 function loadCart() {
   const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  const container = document.getElementById("cartItems");
-  const summary = document.getElementById("summary");
+  const cont = document.getElementById("cartItems");
+  const sum = document.getElementById("summary");
   const empty = document.getElementById("emptyCart");
 
   if (!cart.length) {
-    container.innerHTML = "";
-    summary.style.display = "none";
+    cont.innerHTML = "";
+    sum.style.display = "none";
     empty.style.display = "block";
     return;
   }
 
   empty.style.display = "none";
-  summary.style.display = "block";
+  sum.style.display = "block";
 
-  let totalItems = 0, totalValue = 0, totalOldValue = 0;
-
-  container.innerHTML = cart.map((item, index) => {
-    const price = parseFloat(item.price?.toString().replace(/[^\d.]/g, "")) || 0;
-    const oldPrice = parseFloat(item.oldPrice?.toString().replace(/[^\d.]/g, "")) || parseFloat(item.mrp?.toString().replace(/[^\d.]/g, "")) || 0;
-    const qty = Number(item.qty || 1);
-
+  let totalItems = 0, totalValue = 0, totalOld = 0;
+  cont.innerHTML = cart.map((item, i) => {
+    const price = Number(item.price) || 0;
+    const oldPrice = Number(item.oldPrice) || 0;
+    const qty = Number(item.qty) || 1;
     totalItems += qty;
     totalValue += price * qty;
-    totalOldValue += oldPrice ? oldPrice * qty : price * qty;
+    totalOld += (oldPrice || price) * qty;
+    const discount = oldPrice > price ? Math.round(((oldPrice - price)/oldPrice)*100) : 0;
 
-    const discountPercent = oldPrice && oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
-
-    const availableSizes = item.availableSizes?.length ? item.availableSizes : [item.size];
-    const sizeSection = item.size ? `
+    const sizeHTML = item.size ? `
       <p>Size:
-        <select onchange="updateSize(${index}, this.value)">
-          ${availableSizes.map(s => `<option value="${s}"${s === item.size ? " selected" : ""}>${s}</option>`).join("")}
+        <select onchange="updateSize(${i}, this.value)">
+          ${(item.availableSizes || [item.size]).map(s=>`<option value="${s}" ${s===item.size?'selected':''}>${s}</option>`).join('')}
         </select>
-      </p>` : '';
+      </p>` : "";
 
     return `
-      <div class="cart-item" role="listitem">
-        <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')" />
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}" onclick="goToProduct('${item._id}')">
         <div class="item-details">
-          <h3>${item.name || "(No Name)"}</h3>
-          ${sizeSection}
+          <h3>${item.name}</h3>
+          ${sizeHTML}
           <p>Quantity:
-            <span class="qty-controls" role="group" aria-label="Quantity controls">
-              <button onclick="changeQty(${index}, -1)">-</button>
+            <span class="qty-controls">
+              <button onclick="changeQty(${i},-1)">-</button>
               <span>${qty}</span>
-              <button onclick="changeQty(${index}, 1)">+</button>
+              <button onclick="changeQty(${i},1)">+</button>
             </span>
           </p>
           <div class="price-row">
             ${oldPrice ? `<span class="mrp">₹${oldPrice}</span>` : ""}
             <span class="price">₹${price}</span>
-            ${discountPercent ? `<span class="discount-tag">${discountPercent}% OFF</span>` : ""}
+            ${discount ? `<span class="discount-tag">${discount}% OFF</span>` : ""}
           </div>
         </div>
-        <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
-      </div>
-    `;
+        <button class="remove-btn" onclick="removeItem(${i})">Remove</button>
+      </div>`;
   }).join('');
 
-  const discountTotal = totalOldValue - totalValue;
-  let delivery = totalValue <= 1000 ? 100 : 0;
-  let deliveryText = delivery > 0 ? `<span class="charges-paid">₹${delivery}</span>` : `<span class="charges-free">Free</span>`;
+  const discountAmt = totalOld - totalValue;
+  const delivery = totalValue <= 1000 ? 100 : 0;
+  const deliveryText = delivery ? `<span class='charges-paid'>₹${delivery}</span>` : `<span class='charges-free'>Free</span>`;
 
   document.getElementById("totalItems").textContent = totalItems;
-  document.getElementById("cartValue").textContent = `₹${totalOldValue.toFixed(2)}`;
-  document.getElementById("discountValue").textContent = `-₹${discountTotal.toFixed(2)}`;
+  document.getElementById("cartValue").textContent = `₹${totalOld.toFixed(2)}`;
+  document.getElementById("discountValue").textContent = `-₹${discountAmt.toFixed(2)}`;
   document.getElementById("deliveryCharges").innerHTML = deliveryText;
-  document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery).toFixed(2)}`;
+  document.getElementById("totalAmount").textContent = `₹${(totalValue+delivery).toFixed(2)}`;
 }
 
-function changeQty(i, c) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if (!cart[i]) return;
-  cart[i].qty = Math.max(1, (cart[i].qty || 1) + c);
-  localStorage.setItem("cart", JSON.stringify(cart));
+function changeQty(i,c){
+  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
+  if(!cart[i])return;
+  cart[i].qty = Math.max(1,(cart[i].qty||1)+c);
+  localStorage.setItem("cart",JSON.stringify(cart));
   loadCart();
   showToast("Quantity updated");
 }
 
-function updateSize(i, s) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if (!cart[i]) return;
-  const item = cart[i];
-  const existingIndex = cart.findIndex((p, x) => x !== i && p._id === item._id && p.size === s);
-  if (existingIndex !== -1) {
-    cart[existingIndex].qty = (cart[existingIndex].qty || 1) + (item.qty || 1);
-    cart.splice(i, 1);
+function updateSize(i,s){
+  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
+  if(!cart[i])return;
+  const item=cart[i];
+  const ex = cart.findIndex((p,x)=>x!==i && p._id===item._id && p.size===s);
+  if(ex!==-1){
+    cart[ex].qty = (cart[ex].qty||1)+(item.qty||1);
+    cart.splice(i,1);
   } else {
-    cart[i].size = s;
+    cart[i].size=s;
   }
-  localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem("cart",JSON.stringify(cart));
   loadCart();
   showToast("Size updated");
 }
 
-function removeItem(i) {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  cart.splice(i, 1);
-  localStorage.setItem("cart", JSON.stringify(cart));
+function removeItem(i){
+  let cart = JSON.parse(localStorage.getItem("cart")||"[]");
+  cart.splice(i,1);
+  localStorage.setItem("cart",JSON.stringify(cart));
   loadCart();
-  showToast("Item removed", "warning");
+  showToast("Item removed","warning");
 }
 
-function goToCheckout() {
-  let cart = JSON.parse(localStorage.getItem("cart") || "[]");
-  if (!cart.length) {
-    showToast("Cart is empty", "error");
-    return;
-  }
-  location.href = "address.html";
+function goToCheckout(){
+  const cart = JSON.parse(localStorage.getItem("cart")||"[]");
+  if(!cart.length)return showToast("Cart is empty","error");
+  location.href="address.html";
 }
 
-function goToProduct(id) {
-  location.href = `productdetail.html?id=${id}`;
+function goToProduct(id){
+  location.href=`productdetail.html?id=${id}`;
 }
 
 loadCart();
