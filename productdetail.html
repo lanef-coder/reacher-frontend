@@ -328,7 +328,15 @@
         product = await res.json();
 
         document.getElementById("pname").textContent = product.name;
-        document.getElementById("pmrp").textContent = "₹649";
+
+        // ✅ Dynamic oldPrice handling
+        if (product.oldPrice) {
+          document.getElementById("pmrp").textContent = "₹" + product.oldPrice;
+          document.getElementById("pmrp").style.display = "inline";
+        } else {
+          document.getElementById("pmrp").style.display = "none";
+        }
+
         document.getElementById("pprice").textContent = "₹" + product.price;
         document.getElementById("pdesc").textContent = product.description;
 
@@ -423,7 +431,10 @@
             <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}&type=${type}'">
               <img src="${p.images?.[0]?.replace('http://localhost:5000', backendURL) || ''}" alt="${p.name}">
               <h4>${p.name}</h4>
-              <p>₹${p.price}</p>
+              <p>
+                ${p.oldPrice ? `<span style="text-decoration:line-through;color:#888;font-weight:500;margin-right:4px;">₹${p.oldPrice}</span>` : ''}
+                ₹${p.price}
+              </p>
             </div>`).join("");
       } catch (err) {
         console.error("Failed to load similar:", err);

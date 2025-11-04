@@ -363,9 +363,10 @@
             <div class="product-content">
               <h3>${p.name}</h3>
               <div class="price-wrap">
-                <span class="mrp">₹649</span>
-                <p>₹${p.price}</p>
+               ${p.oldPrice ? `<span class="mrp">₹${p.oldPrice}</span>` : ""}
+               <p>₹${p.price}</p>
               </div>
+
               <button class="buy-btn" onclick="location.href='productdetail.html?id=${p._id}'">Buy Now</button>
             </div>
           </div>
