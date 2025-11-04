@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZKRAZE | Hoodies</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #fff;
+      color: #111;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      background: #f5ecd7;
+      border-bottom: 1px solid #f1e6c8;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 26px;
+      color: #111;
+      letter-spacing: 1px;
+    }
+
+    .material-icons {
+      font-size: 28px;
+      cursor: pointer;
+      color: #111;
+      transition: 0.3s;
+    }
+
+    .material-icons:hover {
+      color: #ed8439;
+    }
+
+    #cartContainer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    #cartContainer:hover { background: #f5ecd7; }
+
+    #cartCount {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #ed8439;
+      color: #fff;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* PRODUCTS */
+    .product-section {
+      margin-top: 30px;
+      padding: 0 20px;
+      max-width: 1300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .product-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    .product-slider {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 15px;
+      justify-items: center;
+    }
+
+    .product {
+      background: #fff;
+      border: 1px solid #ededed;
+      width: 100%;
+      max-width: 260px;
+      color: #111;
+      transition: 0.3s;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product:hover {
+      transform: translateY(-4px);
+      border-color: #ed8439;
+      box-shadow: 0 6px 18px rgba(237, 132, 57, 0.14);
+    }
+
+    .product img {
+      width: 100%;
+      height: 340px;
+      object-fit: contain;
+      background: #fff;
+      border-bottom: 1px solid #ededed;
+      padding: 8px;
+    }
+
+    .product-content { padding: 12px 14px; }
+
+    .product h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .price-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      gap: 7px;
+    }
+
+    .mrp {
+      color: #888;
+      font-size: 15px;
+      text-decoration: line-through;
+    }
+
+    .product p {
+      font-size: 16px;
+      color: #ed8439;
+      font-weight: 700;
+      margin: 5px 0 10px 0;
+    }
+
+    .buy-btn {
+      background: #111;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 2px;
+      transition: background 0.3s;
+    }
+
+    .buy-btn:hover { background: #ed8439; }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      .product-slider {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .product img { height: 220px; }
+      .product { max-width: 180px; }
+      .product h3 { font-size: 13px; }
+      .product .mrp { font-size: 13px; }
+      .product p { font-size: 14px; }
+      .buy-btn { font-size: 12px; padding: 6px 12px; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header>
+    <span class="material-icons" onclick="history.back()">arrow_back</span>
+    <div class="logo">ZKRAZE</div>
+    <div id="cartContainer" onclick="location.href='cart.html'">
+      <span class="material-icons">shopping_bag</span>
+      <span id="cartCount">0</span>
+    </div>
+  </header>
+
+  <!-- PRODUCTS -->
+  <section class="product-section">
+    <h2 class="product-title">Hoodies Collection</h2>
+    <div class="product-slider" id="hoodieContainer"></div>
+  </section>
+
+  <script>
+    const backendURL = "https://reacher-backend-production.up.railway.app";
+
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      document.getElementById("cartCount").innerText = cart.length;
+    }
+    updateCartCount();
+
+    async function loadHoodies() {
+      try {
+        const res = await fetch(`${backendURL}/api/hoodies`);
+        const data = await res.json();
+
+        const container = document.getElementById("hoodieContainer");
+        container.innerHTML = data.map(h => `
+          <div class="product">
+            <img src="${h.images?.[0]?.replace('http://localhost:5000', backendURL) || ''}" alt="${h.name}">
+            <div class="product-content">
+              <h3>${h.name}</h3>
+              <div class="price-wrap">
+                <span class="mrp">₹999</span>
+                <p>₹${h.price}</p>
+              </div>
+              <button class="buy-btn" onclick="location.href='productdetail.html?id=${h._id}'">Buy Now</button>
+            </div>
+          </div>
+        `).join("");
+      } catch (error) {
+        console.error("❌ Failed to load hoodies:", error);
+      }
+    }
+
+    loadHoodies();
+  </script>
+</body>
+</html>
