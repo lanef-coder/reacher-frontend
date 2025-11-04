@@ -116,11 +116,22 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 15px;
+      gap: 12px;
       margin: 15px 0 25px;
     }
-    .mrp { color: #888; font-size: 20px; text-decoration: line-through; }
-    .price { font-size: 28px; font-weight: 800; color: #ed8439; }
+    .mrp {
+      color: #888;
+      font-size: 20px;
+      text-decoration: line-through;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .price {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ed8439;
+      display: inline-block;
+    }
 
     .sizes { margin: 25px 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
     .sizes button {
@@ -329,8 +340,8 @@
 
         document.getElementById("pname").textContent = product.name;
 
-        // ✅ Dynamic oldPrice handling
-        if (product.oldPrice) {
+        // ✅ Show original (struck-through) price if available
+        if (product.oldPrice && product.oldPrice !== product.price) {
           document.getElementById("pmrp").textContent = "₹" + product.oldPrice;
           document.getElementById("pmrp").style.display = "inline";
         } else {
