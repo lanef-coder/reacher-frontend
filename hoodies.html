@@ -140,7 +140,12 @@
       gap: 7px;
     }
 
-    .mrp { color: #888; font-size: 15px; text-decoration: line-through; }
+    .mrp {
+      color: #888;
+      font-size: 15px;
+      text-decoration: line-through;
+      display: none; /* Hidden if no oldPrice */
+    }
 
     .product p {
       font-size: 16px;
@@ -216,7 +221,7 @@
             <div class="product-content">
               <h3>${h.name}</h3>
               <div class="price-wrap">
-                <span class="mrp">₹999</span>
+                ${h.oldPrice ? `<span class="mrp">₹${h.oldPrice}</span>` : ""}
                 <p>₹${h.price}</p>
               </div>
               <button class="buy-btn" onclick="location.href='productdetail.html?id=${h._id}&type=hoodie'">Buy Now</button>
