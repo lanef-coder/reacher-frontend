@@ -6,8 +6,6 @@
   <title>Delivery Address | ZKRAZE</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { background: #fff; color: #111; font-family: "Poppins", sans-serif; }
@@ -108,41 +106,6 @@
     .location-btn:hover { background: #ed8439; color: #fff; }
     .location-status { text-align: center; font-size: 14px; color: #999; min-height: 21px; margin-bottom: 10px; }
 
-    /* Map Modal */
-    #mapModal {
-      display: none;
-      position: fixed;
-      z-index: 3000;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-    }
-    #mapContainer {
-      width: 90%;
-      max-width: 600px;
-      height: 400px;
-      background: #fff;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-    }
-    #map { width: 100%; height: 100%; }
-    #closeMap {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: #ed8439;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      cursor: pointer;
-      font-size: 18px;
-    }
-
     .toast {
       visibility: hidden;
       min-width: 260px;
@@ -162,7 +125,6 @@
       transition: opacity 0.5s, bottom 0.5s;
     }
     .toast.show { visibility: visible; opacity: 1; bottom: 57px; }
-    .field-error { border-color: #ee3636 !important; }
 
     @media (max-width: 600px) {
       .logo { font-size: 20px; }
@@ -188,8 +150,8 @@
       <input type="tel" id="phone" required placeholder="10-digit number, e.g. 9876543210" />
       <label for="email">Email *</label>
       <input type="email" id="email" required placeholder="name@example.com" />
-      <label for="address1">Address Line 1 ,flat no,village,street,*</label>
-      <textarea id="address1" required placeholder="Flat 12B, Building Rosewood.village,area"></textarea>
+      <label for="address1">Address Line 1 *</label>
+      <textarea id="address1" required placeholder="Flat 12B, Street, Area"></textarea>
       <label for="address2">Landmark / Nearby *</label>
       <textarea id="address2" required placeholder="Near Apollo Hospital or any landmark"></textarea>
       <label for="city">City *</label>
@@ -199,19 +161,11 @@
       <label for="pincode">Pincode *</label>
       <input type="text" id="pincode" pattern="[0-9]{6}" required placeholder="6-digit pincode" />
 
-      <button type="button" class="location-btn" onclick="detectLocation()">Use Current Location</button>
-      <button type="button" class="location-btn" onclick="openMap()">📍 Select on Map</button>
+      <button type="button" class="location-btn" onclick="detectLocation()">📍 Use Current Location</button>
 
       <div id="locationStatus" class="location-status"></div>
       <button type="submit" class="btn">Proceed to Payment</button>
     </form>
-  </div>
-
-  <div id="mapModal">
-    <div id="mapContainer">
-      <button id="closeMap">&times;</button>
-      <div id="map"></div>
-    </div>
   </div>
 
   <div id="toast" class="toast"></div>
@@ -227,20 +181,35 @@
       setTimeout(() => toast.classList.remove("show"), 3500);
     }
 
-    // --- Location autofill ---
+    // --- Amazon-style Improved Address Fetch ---
     async function fillAddress(lat, lon) {
       try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`);
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`
+        );
         const data = await res.json();
         const addr = data.address || {};
-        const clean = str => str ? str.replace(/\s*\b(Taluk|Urban|India)\b\s*/gi, '').trim() : '';
-        const area = clean(addr.suburb || addr.village || addr.neighbourhood || '');
-        const road = clean(addr.road || '');
-        document.getElementById("address1").value = [road, area].filter(Boolean).join(", ");
-        document.getElementById("address2").value = clean(addr.landmark || addr.attraction || addr.locality || area);
-        document.getElementById("city").value = clean(addr.city || addr.town || addr.village || "");
+
+        const addressParts = [
+          addr.house_number,
+          addr.road,
+          addr.suburb,
+          addr.village,
+          addr.county,
+          addr.state_district
+        ].filter(Boolean);
+
+        document.getElementById("address1").value = addressParts.join(", ");
+
+        document.getElementById("address2").value =
+          addr.landmark || addr.attraction || addr.locality || addr.suburb || "";
+
+        document.getElementById("city").value =
+          addr.city || addr.town || addr.district || addr.state_district || "";
+
         document.getElementById("state").value = addr.state || "";
         document.getElementById("pincode").value = addr.postcode || "";
+
         showToast("Location detected successfully!", "#00bd85");
         statusEl.textContent = "Location detected ✔";
         statusEl.style.color = "#00bd85";
@@ -250,7 +219,8 @@
     }
 
     function detectLocation() {
-      if (!navigator.geolocation) return showToast("Geolocation not supported.", "#ee3636");
+      if (!navigator.geolocation)
+        return showToast("Geolocation not supported.", "#ee3636");
       statusEl.textContent = "Detecting location...";
       statusEl.style.color = "#999";
       navigator.geolocation.getCurrentPosition(
@@ -258,30 +228,6 @@
         () => showToast("Permission denied or unavailable.", "#ee3636")
       );
     }
-
-    // --- Map Modal ---
-    let map;
-    function openMap() {
-      const modal = document.getElementById("mapModal");
-      modal.style.display = "flex";
-      setTimeout(() => {
-        if (!map) {
-          map = L.map("map").setView([12.9716, 77.5946], 13);
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; OpenStreetMap contributors'
-          }).addTo(map);
-          let marker;
-          map.on("click", e => {
-            if (marker) map.removeLayer(marker);
-            marker = L.marker(e.latlng).addTo(map);
-            fillAddress(e.latlng.lat, e.latlng.lng);
-            showToast("Location selected from map!", "#00bd85");
-            modal.style.display = "none";
-          });
-        }
-      }, 200);
-    }
-    document.getElementById("closeMap").onclick = () => (document.getElementById("mapModal").style.display = "none");
 
     // --- Validation & Save ---
     document.getElementById("addressForm").addEventListener("submit", e => {
@@ -302,7 +248,10 @@
       if (!/^\d{6}$/.test(pincode))
         return showToast("Invalid pincode!", "#ee3636");
 
-      const addressObj = { name, phone, email, address1, address2, city, state, pincode, savedAt: new Date().toISOString() };
+      const addressObj = {
+        name, phone, email, address1, address2, city, state, pincode,
+        savedAt: new Date().toISOString()
+      };
       localStorage.setItem("userAddress", JSON.stringify(addressObj));
       showToast("Address saved! Redirecting...", "#00bd85");
       setTimeout(() => (window.location.href = "payment.html"), 1200);
