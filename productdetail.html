@@ -1,286 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Product Details | ZKRAZE</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
-    body { background: #fff; color: #111; overflow-x: hidden; }
+    /* ---------- base ---------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+    html,body { height: 100%; background:#fff; color:#111; }
+    a { color: inherit; text-decoration: none; }
 
-    /* ---------- HEADER ---------- */
+    /* ---------- header ---------- */
     header {
       background: #f5ecd7;
       color: #111;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 15px 20px;
+      padding: 14px 20px;
       border-bottom: 1px solid #f1e6c8;
       position: sticky;
       top: 0;
-      z-index: 1000;
+      z-index: 1100;
     }
-    .logo {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      font-size: 28px;
-      color: #111;
-      letter-spacing: 2px;
-      text-transform: uppercase;
+    .logo { font-family: 'Playfair Display', serif; font-weight:700; font-size:26px; text-transform:uppercase; letter-spacing:2px; color:#111; }
+    .back-btn { position:absolute; left:18px; background:transparent; border:none; font-size:26px; cursor:pointer; color:#111; display:flex; align-items:center; }
+    #cartContainer { position:absolute; right:18px; top:12px; display:flex; align-items:center; justify-content:center; border-radius:6px; cursor:pointer; padding:6px 10px; }
+    #cartContainer .material-icons{ font-size:24px; color:#111; }
+    #cartCount { position:absolute; top:-4px; right:-4px; background:#ed8439; color:#fff; border-radius:50%; padding:3px 7px; font-size:12px; font-weight:700; box-shadow:0 0 5px rgba(0,0,0,0.12); }
+
+    /* ---------- layout ---------- */
+    .container { max-width:1200px; margin:36px auto; padding:20px; display:flex; flex-wrap:wrap; gap:36px; align-items:flex-start; }
+
+    /* ---------- images ---------- */
+    .image-viewer { flex:1 1 46%; min-width:300px; }
+
+    /* adaptive desktop grid - auto columns */
+    .image-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap:14px;
     }
-    .back-btn {
-      position: absolute;
-      left: 20px;
-      background: transparent;
-      border: none;
-      font-size: 28px;
-      cursor: pointer;
-      color: #111;
-      display: flex;
-      align-items: center;
+    .grid-item {
+      background:#fff; border-radius:8px; overflow:hidden; border:1px solid #eee;
+      display:flex; align-items:center; justify-content:center; min-height:220px; position:relative;
+      transition: transform .18s ease, box-shadow .18s ease;
     }
-    #cartContainer {
-      position: absolute;
-      right: 28px;
-      top: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 6px;
-      cursor: pointer;
-      background: transparent;
-      padding: 6px 10px;
-      min-width: 41px;
-      min-height: 41px;
-      transition: 0.3s;
-    }
-    #cartContainer .material-icons { font-size: 26px; color: #111; }
-    #cartCount {
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      background: #ed8439;
-      color: #fff;
-      border-radius: 50%;
-      padding: 3px 7px;
-      font-size: 12px;
-      font-weight: 700;
-      line-height: 14px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.15);
+    .grid-item:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(17,17,17,0.06); }
+
+    .grid-item img {
+      width:100%; height:100%; object-fit:cover; display:block; cursor:zoom-in; transition: transform .22s ease;
     }
 
-    /* ---------- LAYOUT ---------- */
-    .container {
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 40px;
+    /* broken-overlay for images that fail to load */
+    .grid-item .broken-badge {
+      position:absolute; left:8px; top:8px; background:#fff; color:#ff4d4f; border:1px solid rgba(255,77,79,0.12);
+      padding:6px 8px; border-radius:6px; font-weight:800; font-size:13px; box-shadow:0 6px 18px rgba(0,0,0,0.06);
+      display:flex; gap:6px; align-items:center;
     }
+    .grid-item.broken img { filter:grayscale(60%) opacity(.7); }
 
-    .image-viewer {
-      flex: 1 1 45%;
-      overflow: hidden;
-      border-radius: 10px;
-      border: 1px solid #ededed;
-      background: #fff;
-      position: relative;
-    }
+    /* ---------- mobile slider ---------- */
+    .image-slider { display:none; width:100%; overflow:hidden; border-radius:8px; border:1px solid #eee; background:#fff; }
+    .image-slider .slides { display:flex; transition:transform 300ms ease; will-change:transform; }
+    .image-slider img { width:100%; flex:0 0 100%; height:auto; object-fit:contain; display:block; }
 
-    .image-slider {
-      display: flex;
-      transition: transform 0.4s ease;
-      width: 100%;
-      touch-action: pan-y;
-    }
-    .image-slider img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      flex-shrink: 0;
-      cursor: zoom-in;
-      image-rendering: crisp-edges;
-    }
-    .image-slider img.zoomed { transform: scale(1.5); cursor: zoom-out; }
+    /* ---------- product info ---------- */
+    .info { flex:1 1 44%; min-width:280px; text-align:left; }
 
-    .info {
-      flex: 1 1 50%;
-      text-align: left;
-    }
-    .product-title {
-      font-size: 28px;
-      font-weight: 700;
-      color: #111;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .price-wrap {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 15px 0 25px;
-    }
-    .mrp { color: #888; font-size: 20px; text-decoration: line-through; font-weight: 500; }
-    .price { font-size: 28px; font-weight: 800; color: #ed8439; }
+    .product-title { font-size:28px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-bottom:10px; }
 
-    .sizes { margin: 25px 0; display: flex; flex-wrap: wrap; gap: 10px; }
+    .price-wrap { display:flex; align-items:flex-end; gap:12px; margin:10px 0 18px; }
+    .mrp { color:#9b9b9b; font-size:15px; text-decoration:line-through; font-weight:600; }
+    .price { color:#ed8439; font-size:28px; font-weight:800; letter-spacing:.3px; }
+
+    /* sizes - sharp boxes like nike/souled-store */
+    .sizes { display:flex; flex-wrap:wrap; gap:10px; margin:18px 0; }
     .sizes button {
-      background: #f5ecd7;
-      color: #111;
-      border: 2px solid #bca673;
-      padding: 10px 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      border-radius: 6px;
-      font-size: 15px;
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:8px; min-width:60px;
+      background:#fff; border:2px solid #e9e0c8; padding:10px 18px; font-weight:800; border-radius:8px;
+      cursor:pointer; transition: transform .12s ease, border-color .12s ease, background .12s ease;
+      font-size:14px; color:#111; letter-spacing: .2px; text-transform:uppercase;
+      box-shadow: 0 6px 18px rgba(17,17,17,0.03);
+      position:relative;
     }
-    .sizes button:hover { border-color: #ed8439; }
-    .sizes button.active { border-color: #00b894; background: #ececec; }
-    .sizes button.error { border-color: #ff0000; }
+    .sizes button:hover { transform:translateY(-3px); border-color:#ed8439; }
+    .sizes button.active { background:#111; color:#fff; border-color:#111; }
+    /* error state: show red '✖' on right of button */
+    .sizes button.error {
+      border-color:#ff4d4f; background:#fff;
+      animation: shake .28s linear;
+    }
+    .sizes button.error::after {
+      content: "✖";
+      color:#ff4d4f;
+      font-weight:900;
+      position:absolute;
+      right:8px;
+      top:6px;
+      font-size:14px;
+      line-height:1;
+    }
+    @keyframes shake { 10%{transform:translateX(-4px)} 30%{transform:translateX(4px)} 50%{transform:translateX(-2px)} 70%{transform:translateX(2px)} 100%{transform:none} }
 
-    .qty {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 20px 0 30px;
-    }
-    .qty button {
-      background: #e0d4bc;
-      color: #111;
-      width: 38px;
-      height: 38px;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      font-weight: 700;
-      border-radius: 5px;
-    }
-    .qty input {
-      width: 55px;
-      text-align: center;
-      border: none;
-      background: #f5ecd7;
-      color: #111;
-      font-weight: 700;
-      font-size: 17px;
-      border-radius: 3px;
-    }
+    /* quantity */
+    .qty { display:flex; gap:12px; align-items:center; margin-top:10px; }
+    .qty button { width:40px;height:40px;border-radius:8px;border:none;background:#f2e8d6;font-size:18px;font-weight:800;cursor:pointer; }
+    .qty input { width:64px;height:40px;border-radius:8px;border:1px solid #eee;background:#faf7f1;font-weight:700;text-align:center;font-size:16px; }
 
-    .btn-group {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
+    /* buttons */
+    .btn-group { display:flex; gap:12px; margin-top:18px; align-items:center; }
+    .add-cart {
+      flex:1; display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      background:#111; color:#fff; padding:12px 18px; border-radius:8px; border:none; cursor:pointer; font-weight:800; text-transform:uppercase; font-size:15px;
+    }
+    .add-cart:hover { background:#ed8439; }
+    .share-btn {
+      display:inline-flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:8px; background:#f3f3f3; border:1px solid #e8e8e8; cursor:pointer; color:#333; font-size:18px;
     }
 
-    .add-cart, .share-btn {
-      flex: 1;
-      background: #111;
-      color: white;
-      border: none;
-      padding: 14px 25px;
-      font-weight: 700;
-      border-radius: 6px;
-      font-size: 16px;
-      cursor: pointer;
-      text-transform: uppercase;
-      transition: 0.3s;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .add-cart:hover { background: #ed8439; }
-    .share-btn { background: #ed8439; }
-    .share-btn:hover { background: #111; }
+    /* description */
+    .desc { margin-top:22px; color:#333; line-height:1.65; font-size:15px; }
 
-    .desc { margin-top: 35px; color: #333; line-height: 1.7; }
+    /* similar */
+    .similar { margin-top:48px; width:100%; }
+    .similar h3 { color:#ed8439; font-size:20px; margin-bottom:14px; }
+    .similar-grid { display:flex; gap:14px; overflow-x:auto; padding-bottom:8px; scrollbar-width:none; }
+    .similar-grid::-webkit-scrollbar{ display:none; }
+    .similar-item { flex:0 0 170px; border-radius:8px; border:1px solid #eee; padding:12px; background:#fff; text-align:center; cursor:pointer; }
+    .similar-item img { width:100%; height:150px; object-fit:contain; margin-bottom:8px; }
+    .similar-item h4 { font-size:14px; font-weight:700; color:#111; margin-bottom:6px; }
+    .similar-item p { font-weight:800; color:#ed8439; font-size:14px; }
 
-    /* ---------- SIMILAR ---------- */
-    .similar { margin-top: 60px; overflow: hidden; }
-    .similar h3 { font-size: 22px; color: #ed8439; margin-bottom: 18px; }
-    .similar-grid {
-      display: flex;
-      gap: 16px;
-      overflow-x: auto;
-      scroll-behavior: smooth;
-      padding-bottom: 8px;
-      scrollbar-width: none;
+    /* modal (zoom) */
+    .img-modal { position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.8); z-index:1200; padding:24px; }
+    .img-modal.open { display:flex; }
+    .img-modal .modal-inner { position:relative; max-width:95%; max-height:95%; }
+    .img-modal img { width:auto; max-width:100%; max-height:80vh; border-radius:10px; box-shadow:0 10px 40px rgba(0,0,0,.6); display:block; }
+    .img-modal .close-btn {
+      position:absolute; right:-10px; top:-10px; background:#fff; color:#111; border-radius:10px; width:36px; height:36px; display:flex; align-items:center; justify-content:center; cursor:pointer; border:1px solid #eee; font-weight:800;
+      box-shadow:0 8px 28px rgba(0,0,0,.18);
     }
-    .similar-grid::-webkit-scrollbar { display: none; }
-    .similar-item {
-      flex: 0 0 180px;
-      background: #fff;
-      border: 1px solid #ededed;
-      text-align: center;
-      padding: 12px;
-      cursor: pointer;
-      transition: 0.3s;
-      border-radius: 10px;
-    }
-    .similar-item img {
-      width: 100%;
-      height: 180px;
-      object-fit: contain;
-      margin-bottom: 8px;
-      image-rendering: crisp-edges;
-    }
-    .similar-item h4 { font-size: 14px; font-weight: 600; color: #111; margin-bottom: 3px; }
-    .similar-item p { font-size: 14px; font-weight: 700; color: #ed8439; }
-    .similar-item:hover { transform: translateY(-3px); border-color: #ed8439; }
-
-    /* ---------- MOBILE ---------- */
-    @media (max-width: 768px) {
-      .container { flex-direction: column; gap: 25px; }
-      .logo { font-size: 20px; }
-      .info { text-align: center; }
-      .add-cart, .share-btn { width: 48%; font-size: 15px; }
-      .btn-group { justify-content: center; }
-      .similar-item { flex: 0 0 160px; }
-      .similar-item img { height: 160px; }
-      .product-title { font-size: 22px; }
+    .img-modal .broken-badge {
+      position:absolute; left:8px; top:8px; background:#fff; color:#ff4d4f; border:1px solid rgba(255,77,79,0.12);
+      padding:6px 8px; border-radius:6px; font-weight:800; font-size:13px; display:flex; gap:6px; align-items:center;
+      box-shadow:0 6px 18px rgba(0,0,0,0.06);
     }
 
-    /* ---------- TOAST ---------- */
-    .toast-container {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      z-index: 3000;
+    /* responsive behavior */
+    @media (max-width:900px) {
+      .container { gap:20px; padding:16px; max-width:980px; }
+      .image-viewer { flex-basis:100%; }
+      .info { flex-basis:100%; }
+      .image-grid { grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
     }
-    .toast {
-      background: rgba(250,240,230,0.98);
-      border: 1px solid #f6e5ca;
-      color: #111;
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 600;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.14);
-      opacity: 0;
-      transform: translateY(-10px);
-      animation: slideIn 0.4s forwards;
+    @media (max-width:768px) {
+      .image-grid { display:none; }
+      .image-slider { display:block; }
+      .share-btn { width:44px; height:44px; border-radius:8px; background:#f3f3f3; color:#333; }
+      .btn-group { justify-content:center; }
+      .add-cart { width:52%; }
+      .similar-item { flex:0 0 150px; }
     }
-    .toast.success { border-left: 5px solid #00b894; }
-    .toast.error { border-left: 5px solid #ed8439; }
-    @keyframes slideIn { to { opacity: 1; transform: translateY(0); } }
+
+    /* toast */
+    .toast-container { position:fixed; top:18px; right:18px; display:flex; flex-direction:column; gap:10px; z-index:1300; }
+    .toast { background:rgba(250,240,230,0.98); border:1px solid #f6e5ca; color:#111; padding:10px 14px; border-radius:8px; font-size:14px; font-weight:700; box-shadow:0 6px 18px rgba(0,0,0,0.07); opacity:0; transform:translateY(-8px); animation: slideIn .35s forwards; }
+    .toast.success { border-left:4px solid #00b894; } .toast.error { border-left:4px solid #ed8439; }
+    @keyframes slideIn { to { opacity:1; transform:none; } }
   </style>
 </head>
 <body>
   <header>
-    <button class="back-btn" onclick="history.back()">
-      <span class="material-icons">arrow_back</span>
-    </button>
+    <button class="back-btn" onclick="history.back()"><span class="material-icons">arrow_back</span></button>
     <div class="logo">ZKRAZE</div>
     <div id="cartContainer" onclick="location.href='cart.html'">
       <span class="material-icons">shopping_bag</span>
@@ -288,40 +185,66 @@
     </div>
   </header>
 
-  <div class="container">
-    <div class="image-viewer">
-      <div class="image-slider" id="imageSlider"></div>
-    </div>
+  <main class="container">
+    <!-- images -->
+    <section class="image-viewer" aria-label="Product images">
+      <div class="image-grid" id="imageGrid" role="list"></div>
 
-    <div class="info">
-      <h2 class="product-title" id="pname"></h2>
-      <div class="price-wrap">
-        <span class="mrp" id="pmrp"></span>
-        <span class="price" id="pprice"></span>
+      <!-- mobile slider -->
+      <div class="image-slider" id="imageSlider" aria-hidden="true">
+        <div class="slides" id="slides"></div>
       </div>
-      <div class="sizes" id="psizes"></div>
-      <div class="qty">
-        <button onclick="changeQty(-1)">-</button>
-        <input type="text" id="quantity" value="1" readonly />
+    </section>
+
+    <!-- info -->
+    <aside class="info">
+      <h1 class="product-title" id="pname"></h1>
+
+      <div class="price-wrap">
+        <div class="mrp" id="pmrp" style="display:none"></div>
+        <div class="price" id="pprice"></div>
+      </div>
+
+      <div id="psizes" class="sizes" aria-label="Available sizes"></div>
+
+      <div class="qty" aria-label="Quantity">
+        <button onclick="changeQty(-1)">−</button>
+        <input id="quantity" type="text" value="1" readonly aria-readonly="true" />
         <button onclick="changeQty(1)">+</button>
       </div>
+
       <div class="btn-group">
         <button class="add-cart" onclick="addToCart()">
-          <span class="material-icons">add_shopping_cart</span> Add to Cart
+          <span class="material-icons">add_shopping_cart</span>
+          Add to Cart
         </button>
-        <button class="share-btn" onclick="shareProduct()">
-          <span class="material-icons">share</span> Share
+
+        <!-- icon-only share -->
+        <button class="share-btn" onclick="shareProduct()" title="Share product">
+          <span class="material-icons">share</span>
         </button>
       </div>
-      <p class="desc" id="pdesc"></p>
+
+      <div class="desc" id="pdesc"></div>
+    </aside>
+  </main>
+
+  <!-- similar -->
+  <section class="container similar" style="max-width:1200px;">
+    <h3>Similar Products</h3>
+    <div class="similar-grid" id="similarGrid" aria-label="Similar products"></div>
+  </section>
+
+  <!-- image modal -->
+  <div class="img-modal" id="imgModal" onclick="closeModal(event)">
+    <div class="modal-inner" role="dialog" aria-modal="true">
+      <div class="broken-badge" id="modalBroken" style="display:none">✖ Broken</div>
+      <img id="modalImg" src="" alt="Zoomed product image" />
+      <button class="close-btn" onclick="closeModal(event)" aria-label="Close image">✕</button>
     </div>
   </div>
 
-  <div class="container similar">
-    <h3>Similar Products</h3>
-    <div class="similar-grid" id="similarGrid"></div>
-  </div>
-
+  <!-- toasts -->
   <div class="toast-container" id="toastContainer"></div>
 
   <script>
@@ -331,8 +254,10 @@
     const type = urlParams.get("type") || "product";
     const apiEndpoint = type === "hoodie" ? "hoodies" : "products";
 
-    let product = null, currentImageIndex = 0;
+    let product = null;
+    let sliderState = { count: 0, current: 0 };
 
+    // cart count
     function updateCartCount() {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const totalQty = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -340,37 +265,41 @@
     }
     updateCartCount();
 
+    // toast
     function showToast(msg, type = "success") {
-      const c = document.getElementById("toastContainer");
+      const container = document.getElementById("toastContainer");
       const t = document.createElement("div");
       t.className = `toast ${type}`;
       t.textContent = msg;
-      c.appendChild(t);
+      container.appendChild(t);
       setTimeout(() => {
-        t.style.opacity = "0";
-        t.style.transform = "translateY(-10px)";
+        t.style.opacity = '0';
+        t.style.transform = 'translateY(-8px)';
         setTimeout(() => t.remove(), 400);
       }, 2000);
     }
 
+    // load product
     async function loadProduct() {
       try {
         const res = await fetch(`${backendURL}/api/${apiEndpoint}/${id}`);
         product = await res.json();
 
-        document.getElementById("pname").textContent = product.name;
-        document.getElementById("pprice").textContent = "₹" + product.price;
-        document.getElementById("pdesc").textContent = product.description;
+        document.getElementById("pname").textContent = product.name || '';
+        document.getElementById("pprice").textContent = product.price ? "₹" + product.price : '';
+        document.getElementById("pdesc").textContent = product.description || '';
+
         if (product.oldPrice && product.oldPrice !== product.price) {
-          document.getElementById("pmrp").textContent = "₹" + product.oldPrice;
+          const pmrp = document.getElementById("pmrp");
+          pmrp.textContent = "₹" + product.oldPrice;
+          pmrp.style.display = 'block';
         }
 
         const allImages = (product.images || []).map(img => img.replace("http://localhost:5000", backendURL));
-        const slider = document.getElementById("imageSlider");
-        slider.innerHTML = allImages.map(src => `<img src="${src}" alt="Product image">`).join("");
+        renderImageGrid(allImages);
+        renderSlider(allImages);
 
-        initSwipe(slider, allImages.length);
-
+        // sizes
         const sizeKeys = Object.keys(product.sizes || {}).filter(s => s && s !== "_id");
         document.getElementById("psizes").innerHTML = sizeKeys.map(s => `<button onclick="selectSize(this)">${s}</button>`).join("");
 
@@ -381,81 +310,206 @@
       }
     }
 
+    // render desktop grid
+    function renderImageGrid(imgs) {
+      const grid = document.getElementById("imageGrid");
+      grid.innerHTML = imgs.map(src => `
+        <div class="grid-item" role="listitem">
+          <img src="${src}" alt="Product image" onerror="markImgBroken(this)" onclick="openModal('${src}', this)" />
+        </div>
+      `).join('');
+    }
+
+    // render mobile slider
+    function renderSlider(imgs) {
+      const slides = document.getElementById("slides");
+      slides.innerHTML = imgs.map(src => `<img src="${src}" alt="Product image" onerror="markImgBroken(this)">`).join("");
+      sliderState.count = imgs.length;
+      sliderState.current = 0;
+      updateSliderTransform();
+      initSliderInteractions();
+    }
+
+    // mark broken image
+    function markImgBroken(imgEl) {
+      const container = imgEl.closest('.grid-item');
+      if (container) {
+        container.classList.add('broken');
+        if (!container.querySelector('.broken-badge')) {
+          const badge = document.createElement('div');
+          badge.className = 'broken-badge';
+          badge.innerHTML = '✖ Broken';
+          container.appendChild(badge);
+        }
+      }
+      // if it's inside the modal, show modal badge
+      if (document.getElementById('modalImg').src === imgEl.src) {
+        document.getElementById('modalBroken').style.display = 'flex';
+      }
+    }
+
+    // open modal
+    function openModal(src, imgEl) {
+      const modal = document.getElementById("imgModal");
+      const img = document.getElementById("modalImg");
+      const modalBroken = document.getElementById("modalBroken");
+      modalBroken.style.display = 'none';
+      img.src = src;
+      img.onload = () => modalBroken.style.display = 'none';
+      img.onerror = () => modalBroken.style.display = 'flex';
+      modal.classList.add("open");
+    }
+
+    // close modal (prevent clicks inside image from bubbling)
+    function closeModal(e) {
+      if (e && e.target && (e.target.id === 'modalImg' || e.target.classList.contains('close-btn'))) {
+        // close only when clicking close button or outside handled separately
+      }
+      const modal = document.getElementById("imgModal");
+      const img = document.getElementById("modalImg");
+      modal.classList.remove("open");
+      img.src = '';
+      document.getElementById("modalBroken").style.display = 'none';
+    }
+    // close by clicking outside image
+    document.getElementById('imgModal').addEventListener('click', function(e){
+      if (e.target === this) closeModal(e);
+    });
+
+    // sizes selection
     function selectSize(btn) {
       document.querySelectorAll(".sizes button").forEach(b => b.classList.remove("active", "error"));
       btn.classList.add("active");
     }
 
+    // quantity
     function changeQty(n) {
       const input = document.getElementById("quantity");
-      let q = parseInt(input.value) + n;
-      if (q < 1) q = 1;
+      let q = parseInt(input.value || '1', 10) + n;
+      if (isNaN(q) || q < 1) q = 1;
       input.value = q;
     }
 
+    // add to cart
     function addToCart() {
       const selected = document.querySelector(".sizes button.active");
       if (!selected) {
-        document.querySelectorAll(".sizes button").forEach(b => b.classList.add("error"));
+        // mark all sizes as error briefly and show toast
+        document.querySelectorAll(".sizes button").forEach(b => {
+          b.classList.remove('active');
+          b.classList.add('error');
+          setTimeout(()=> b.classList.remove('error'), 1200);
+        });
         showToast("Please select a size!", "error");
         return;
       }
       const selectedSize = selected.textContent.trim();
-      const quantity = parseInt(document.getElementById("quantity").value);
+      const quantity = parseInt(document.getElementById("quantity").value || '1', 10);
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const existing = cart.find(i => i._id === product._id && i.size === selectedSize);
       if (existing) existing.quantity = (existing.quantity || 1) + quantity;
-      else cart.push({ _id: product._id, name: product.name, image: product.images?.[0] || "", price: product.price, size: selectedSize, quantity, type });
+      else cart.push({
+        _id: product._id,
+        name: product.name,
+        image: (product.images && product.images[0]) ? product.images[0].replace("http://localhost:5000", backendURL) : "",
+        price: product.price,
+        oldPrice: product.oldPrice || null,
+        size: selectedSize,
+        quantity,
+        type
+      });
       localStorage.setItem("cart", JSON.stringify(cart));
       updateCartCount();
       showToast("Added to cart!", "success");
-      setTimeout(() => location.href = "cart.html", 1000);
+      setTimeout(() => location.href = "cart.html", 900);
     }
 
+    // similar products
     async function loadSimilar() {
       try {
         const res = await fetch(`${backendURL}/api/${apiEndpoint}`);
         const data = await res.json();
         const similar = data.filter(p => p._id !== id);
-        document.getElementById("similarGrid").innerHTML = similar.slice(0, 10)
-          .map(p => `
-            <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}&type=${type}'">
-              <img src="${p.images?.[0]?.replace('http://localhost:5000', backendURL) || ''}" alt="${p.name}">
-              <h4>${p.name}</h4>
-              <p>${p.oldPrice ? `<span style='text-decoration:line-through;color:#888;font-weight:500;margin-right:4px;'>₹${p.oldPrice}</span>` : ''} ₹${p.price}</p>
-            </div>`).join("");
+        document.getElementById("similarGrid").innerHTML = similar.slice(0,10).map(p => `
+          <div class="similar-item" onclick="location.href='productdetail.html?id=${p._id}&type=${type}'">
+            <img src="${(p.images && p.images[0]) ? p.images[0].replace('http://localhost:5000', backendURL) : ''}" alt="${p.name}" onerror="this.style.opacity=.6">
+            <h4>${p.name}</h4>
+            <p>${p.oldPrice ? `<span style="text-decoration:line-through;color:#888;font-weight:600;margin-right:6px;">₹${p.oldPrice}</span>` : ''}₹${p.price}</p>
+          </div>
+        `).join('');
       } catch (err) {
         console.error("Failed to load similar:", err);
       }
     }
 
-    // Swipe for product images
-    function initSwipe(slider, count) {
-      let startX = 0, currentIndex = 0;
-      slider.addEventListener("touchstart", e => { startX = e.touches[0].clientX; });
-      slider.addEventListener("touchmove", e => {
-        if (!startX) return;
-        const diff = e.touches[0].clientX - startX;
-        if (Math.abs(diff) > 60) {
-          if (diff > 0) currentIndex = Math.max(0, currentIndex - 1);
-          else currentIndex = Math.min(count - 1, currentIndex + 1);
-          slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-          startX = 0;
-        }
-      });
-    }
-
+    // share
     function shareProduct() {
+      if (!product) return;
+      const payload = { title: product.name, text: product.description, url: window.location.href };
       if (navigator.share) {
-        navigator.share({ title: product.name, text: product.description, url: window.location.href })
-          .catch(() => {});
+        navigator.share(payload).catch(() => {});
       } else {
-        navigator.clipboard.writeText(window.location.href);
-        showToast("Link copied to clipboard!", "success");
+        navigator.clipboard.writeText(window.location.href).then(()=> showToast("Link copied to clipboard!", "success"));
       }
     }
 
+    /* slider logic (touch + mouse) */
+    function initSliderInteractions() {
+      const slider = document.getElementById("imageSlider");
+      const slides = document.getElementById("slides");
+      if (!slider) return;
+      let startX = 0, dragging = false, width = slider.clientWidth;
+
+      const unify = e => e.changedTouches ? e.changedTouches[0] : e;
+
+      const onStart = e => {
+        dragging = true;
+        startX = unify(e).clientX;
+        slider.classList.add('dragging');
+      };
+      const onMove = e => {
+        if (!dragging) return;
+        const x = unify(e).clientX;
+        const diff = x - startX;
+        slides.style.transform = `translateX(${-sliderState.current*width + diff}px)`;
+      };
+      const onEnd = e => {
+        if (!dragging) return;
+        dragging = false;
+        slider.classList.remove('dragging');
+        const x = unify(e).clientX;
+        const diff = x - startX;
+        const threshold = width * 0.18;
+        if (diff > threshold) sliderState.current = Math.max(0, sliderState.current - 1);
+        else if (diff < -threshold) sliderState.current = Math.min(sliderState.count - 1, sliderState.current + 1);
+        updateSliderTransform();
+      };
+
+      // attach
+      const slidesEl = document.getElementById('slides');
+      slidesEl.ontouchstart = onStart;
+      slidesEl.ontouchmove = onMove;
+      slidesEl.ontouchend = onEnd;
+      slidesEl.onmousedown = onStart;
+      window.onmousemove = onMove;
+      window.onmouseup = onEnd;
+
+      window.addEventListener('resize', ()=> { width = slider.clientWidth; updateSliderTransform(); });
+    }
+
+    function updateSliderTransform() {
+      const slides = document.getElementById("slides");
+      const slider = document.getElementById("imageSlider");
+      if (!slides || !slider) return;
+      const w = slider.clientWidth;
+      slides.style.transform = `translateX(-${sliderState.current * w}px)`;
+    }
+
+    // initialize
     loadProduct();
+
+    // esc close modal
+    window.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(e); });
   </script>
 </body>
-</html>
+</html> 
