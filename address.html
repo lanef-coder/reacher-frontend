@@ -24,6 +24,7 @@
       justify-content: center;
       position: relative;
     }
+
     .logo {
       font-family: 'Playfair Display', serif;
       font-size: 28px;
@@ -35,28 +36,28 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translateX(-50%) translateY(-50%);
+      transform: translate(-50%, -50%);
     }
+
+    /* Back Arrow (Left Side, Black, No Background) */
     .header-btn {
       position: absolute;
-      right: 20px;
+      left: 15px;
       top: 50%;
       transform: translateY(-50%);
-      background: #ed8439;
-      color: white;
+      background: none;
       border: none;
-      border-radius: 8px;
-      padding: 11px 20px;
-      font-size: 16px;
-      font-weight: 600;
+      color: #111;
+      font-size: 26px;
+      cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      transition: background 0.2s;
-      box-shadow: 0 2px 8px rgba(237, 132, 57, 0.08);
+      justify-content: center;
+      transition: transform 0.2s;
     }
-    .header-btn:hover { background: #c79151; }
+    .header-btn:hover {
+      transform: translateY(-50%) scale(1.05);
+    }
 
     /* Container */
     .container {
@@ -67,6 +68,7 @@
       border-radius: 14px;
       box-shadow: 0 0 10px rgba(237, 132, 57, 0.11);
     }
+
     h2 {
       text-align: center;
       color: #ed8439;
@@ -74,7 +76,15 @@
       margin-bottom: 25px;
       font-size: 23px;
     }
-    label { display: block; margin-bottom: 6px; font-weight: 600; color: #6d665e; font-size: 16px; }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #6d665e;
+      font-size: 16px;
+    }
+
     input, textarea {
       width: 100%;
       padding: 10px 12px;
@@ -85,8 +95,10 @@
       font-size: 15px;
       transition: border 0.3s, box-shadow 0.3s;
     }
+
     input:focus, textarea:focus { border-color: #ed8439; }
     textarea { resize: none; height: 70px; }
+
     .btn, .location-btn {
       display: block;
       width: 100%;
@@ -100,11 +112,20 @@
       box-shadow: 0 2px 8px rgba(237,132,57,0.08);
       margin-bottom: 10px;
     }
+
     .btn { background: #ed8439; color: white; text-transform: uppercase; }
     .btn:hover { background: #c79151; }
+
     .location-btn { background: #eedbbf; color: #111; font-weight: 600; }
     .location-btn:hover { background: #ed8439; color: #fff; }
-    .location-status { text-align: center; font-size: 14px; color: #999; min-height: 21px; margin-bottom: 10px; }
+
+    .location-status {
+      text-align: center;
+      font-size: 14px;
+      color: #999;
+      min-height: 21px;
+      margin-bottom: 10px;
+    }
 
     .toast {
       visibility: hidden;
@@ -135,15 +156,16 @@
       .logo { font-size: 20px; }
       .container { margin: 20px; padding: 17px; }
       h2 { font-size: 18px; }
+      .header-btn { font-size: 24px; left: 10px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <div class="logo">ZKRAZE</div>
-    <button class="header-btn left-btn" onclick="window.location.href='cart.html'">
-      <span class="material-icons">arrow_back</span> 
+    <button class="header-btn" onclick="window.location.href='cart.html'">
+      <span class="material-icons">arrow_back</span>
     </button>
+    <div class="logo">ZKRAZE</div>
   </header>
 
   <div class="container">
@@ -205,13 +227,10 @@
         ].filter(Boolean);
 
         document.getElementById("address1").value = addressParts.join(", ");
-
         document.getElementById("address2").value =
           addr.landmark || addr.attraction || addr.locality || addr.suburb || "";
-
         document.getElementById("city").value =
           addr.city || addr.town || addr.district || addr.state_district || "";
-
         document.getElementById("state").value = addr.state || "";
         document.getElementById("pincode").value = addr.postcode || "";
 
@@ -237,17 +256,13 @@
     // --- Validation & Save ---
     document.getElementById("addressForm").addEventListener("submit", e => {
       e.preventDefault();
-
-      // Remove previous error highlights
       document.querySelectorAll(".error-field").forEach(f => f.classList.remove("error-field"));
 
       const fields = [
         "name", "phone", "email", "address1", "address2", "city", "state", "pincode"
       ].map(id => document.getElementById(id));
 
-      // find first empty field
       const emptyField = fields.find(f => !f.value.trim());
-
       if (emptyField) {
         emptyField.classList.add("error-field");
         emptyField.scrollIntoView({ behavior: "smooth", block: "center" });
