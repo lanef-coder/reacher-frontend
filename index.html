@@ -279,6 +279,42 @@
       .product p { font-size: 14px; }
       .buy-btn { font-size: 12px; padding: 6px 12px; }
     }
+    
+    /* FOOTER */
+    footer {
+      background: #111; /* black */
+      padding: 22px 0;
+      margin-top: 50px;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+    }
+
+    .footer-links a {
+      color: #f5ecd7;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.3s;
+    }
+
+    .footer-links a:hover {
+      color: #ed8439;
+    }
+    @media (max-width: 600px) {
+  .footer-links {
+    flex-direction: column;   /* stack vertically */
+    gap: 12px;                /* smaller spacing */
+    text-align: center;
+  }
+
+  .footer-links a {
+    font-size: 15px;          /* slightly bigger text for mobile */
+  }
+}
+
   </style>
 </head>
 
@@ -301,8 +337,9 @@
     <a href="index.html">Home</a>
     <a href="hoodies.html">Hoodies</a>
     <a href="privacypolicy.html">Privacy Policy</a>
-    <a href="about.html">About</a>
+    <a href="aboutus.html">About</a>
     <a href="contact.html">Contact</a>
+    <a href="refundandreturnpolicy.html">Refund & Return Policy</a>
   </div>
 
   <!-- SLIDER -->
@@ -315,7 +352,15 @@
     <h2 class="product-title">Latest Collection</h2>
     <div class="product-slider" id="productSlider"></div>
   </section>
-
+<!-- FOOTER -->
+  <footer>
+    <div class="footer-links">
+      <a href="privacypolicy.html">Privacy Policy</a>
+      <a href="termsandconditions.html">Terms & Conditions</a>
+      <a href="aboutus.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </footer>
   <script>
     const menuBtn = document.getElementById("menuBtn");
     const sideMenu = document.getElementById("sideMenu");
