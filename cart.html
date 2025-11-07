@@ -428,7 +428,7 @@ function loadCart(){
   document.getElementById("cartValue").textContent = `₹${totalOld.toFixed(2)}`;
   document.getElementById("discountValue").textContent = `-₹${discountAmt.toFixed(2)}`;
   document.getElementById("deliveryCharges").innerHTML = deliveryText;
-  document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery - discountAmt).toFixed(2)}`;
+  document.getElementById("totalAmount").textContent = `₹${(totalValue + delivery ).toFixed(2)}`;
 }
 
 /* ---------- FUNCTIONS ---------- */
